@@ -900,6 +900,140 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ==========================================================================
+  // Immersive Ambient Particle & Reactive Light Field Canvas
+  // ==========================================================================
+  const canvas = document.getElementById('ambient-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    let mouseX = width / 2;
+    let mouseY = height / 2;
+    let targetMouseX = mouseX;
+    let targetMouseY = mouseY;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      targetMouseX = e.clientX;
+      targetMouseY = e.clientY;
+    });
+
+    // Create celestial floating ambient nodes
+    const particleCount = 42;
+    const particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 2 + 1,
+        baseX: Math.random() * width,
+        baseY: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        alpha: Math.random() * 0.35 + 0.15,
+        pulseSpeed: Math.random() * 0.02 + 0.005,
+        pulseVal: Math.random() * Math.PI
+      });
+    }
+
+    // Fluid ambient glow orbs
+    const orbs = [
+      { x: width * 0.2, y: height * 0.3, radius: 280, color: 'rgba(225, 29, 72, 0.035)', vx: 0.15, vy: 0.12 },
+      { x: width * 0.8, y: height * 0.4, radius: 340, color: 'rgba(10, 13, 20, 0.025)', vx: -0.12, vy: 0.18 },
+      { x: width * 0.5, y: height * 0.8, radius: 300, color: 'rgba(225, 29, 72, 0.028)', vx: 0.18, vy: -0.15 }
+    ];
+
+    function renderAmbientFrame() {
+      // Smooth cursor lerp
+      mouseX += (targetMouseX - mouseX) * 0.05;
+      mouseY += (targetMouseY - mouseY) * 0.05;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Render floating fluid ambient light orbs
+      orbs.forEach(orb => {
+        orb.x += orb.vx;
+        orb.y += orb.vy;
+
+        if (orb.x < -orb.radius) orb.x = width + orb.radius;
+        if (orb.x > width + orb.radius) orb.x = -orb.radius;
+        if (orb.y < -orb.radius) orb.y = height + orb.radius;
+        if (orb.y > height + orb.radius) orb.y = -orb.radius;
+
+        const grad = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.radius);
+        grad.addColorStop(0, orb.color);
+        grad.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Cursor gentle spotlight caustics
+      const cursorGlow = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 260);
+      cursorGlow.addColorStop(0, 'rgba(225, 29, 72, 0.045)');
+      cursorGlow.addColorStop(0.5, 'rgba(10, 13, 20, 0.015)');
+      cursorGlow.addColorStop(1, 'transparent');
+      ctx.fillStyle = cursorGlow;
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, 260, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw responsive micro particles with soft connection links
+      particles.forEach((p, idx) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.pulseVal += p.pulseSpeed;
+
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        // Proximity repulsion from mouse
+        const dx = p.x - mouseX;
+        const dy = p.y - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          const force = (120 - dist) / 120;
+          p.x += (dx / dist) * force * 1.5;
+          p.y += (dy / dist) * force * 1.5;
+        }
+
+        const currentAlpha = p.alpha + Math.sin(p.pulseVal) * 0.1;
+        ctx.fillStyle = `rgba(10, 13, 20, ${Math.max(0.05, Math.min(0.4, currentAlpha))})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Connect nearby points
+        for (let j = idx + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist2 < 110) {
+            ctx.strokeStyle = `rgba(10, 13, 20, ${(1 - dist2 / 110) * 0.06})`;
+            ctx.lineWidth = 0.75;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      });
+
+      requestAnimationFrame(renderAmbientFrame);
+    }
+
+    renderAmbientFrame();
+  }
+
   // Start initial auto demo
   startAutoSimulation();
 });

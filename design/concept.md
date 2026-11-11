@@ -1,9 +1,21 @@
-# Concept: live-edit Proofing Deck
+# Research & Concept: Minimal Luxury Immersive Edition
 
-## Big Idea
-This site is an **Art Book Proofing Desk** that treats live localhost code edits like surgical ink and highlighter annotations on gallery proofs.
+## 1. Concept: "The Precision Instrument" (Minimalist Luxury Studio)
+Instead of crowded widgets or heavy borders, this design treats `live-edit` as a high-precision, acoustic-grade developer instrument.
+- **Atmosphere**: A rich, deep velvet obsidian foundation (`#090a0f`) infused with a living, generative canvas of drifting ambient light spheres, low-frequency subtle film grain, and luminous cursor reactivity.
+- **Color Discipline**: Deep Obsidian (`#090a0f`), Muted Titanium White (`#f4f5f8`), and a single, razor-sharp Secondary Accent of Crimson/Vermilion (`#e11d48`) with warm champagne platinum undertones (`rgba(255, 255, 255, 0.08)`).
+- **Typography as Architecture**:
+  - Headings: `Plus Jakarta Sans` / `Sora` paired with delicate editorial touch.
+  - Telemetry: Ultra-clean `Martian Mono` at micro scale (`0.75rem`) with high-contrast legibility.
+- **Negative Space**: Massive breathing room, balanced proportions, and calm confident pacing.
 
-## 3 Memorable Moments
-1. **The Two-Tone Split Exhibition**: Deep gallery basalt (#0e1013) on one half hosting the living interactive simulator, and warm archival bone paper (#f4f1ea) on the other half hosting the live AST proofing diff and terminal controls.
-2. **Horizontal Exhibition Folio Deck**: Sections glide with velocity skew and horizontal plate numbering (`[ Plate 01 ]`, `[ Plate 02 ]`), mimicking a museum monograph or art book catalog.
-3. **Tactile Marker Annotations & Tilted Proof Stamps**: Handwritten editorial arrows and margin notes (`"literally just click here ↗"`, `"written in 12ms"`) with deliberately rotated verification stamps (`-2.8deg` and `+3.2deg`).
+## 2. Immersive Background Mechanics
+- **Interactive Particle & Ambient Field Canvas**: An HTML5 60fps canvas layer (`#ambient-canvas`) rendering soft, floating fluid orbs and cosmic dust particles that respond with gentle inertia to cursor movement.
+- **Frosted Smoked Obsidian Glass**: Sleek translucent panels with subtle `backdrop-filter: blur(28px)`, hairline borders (`1px solid rgba(255, 255, 255, 0.08)`), and soft radial edge highlights.
+
+## 3. Retained Core Functional Requirements
+- Lenis smooth scroll fully functional with `data-lenis-prevent` on simulator.
+- Full interactive live-editing sandbox & automated walkthrough loop intact (`#live-stage`, `#webpage-canvas`, `#branches-grid`).
+- Speed race benchmark (`#btn-run-benchmark`, `#timer-chat`, `#timer-live`).
+- All GitHub links (`https://github.com/lakshya1282/live-edit.git`).
+- Creator attribution (`Created by @web_pros (instagram)`).

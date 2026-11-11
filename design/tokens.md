@@ -1,36 +1,43 @@
-# Design Tokens: live-edit (Off-White & Red Editorial Edition)
+# Design Tokens: Minimalist Premium Immersive Edition
 
-## 1. Palette: Off-White Archival Paper with Cardinal Red Secondary Accent
 ```css
 :root {
-  /* Primary Surfaces: Warm Off-White & Deep Obsidian/Basalt */
-  --split-dark: #0e1013;
-  --split-dark-surface: #15191f;
-  --split-dark-border: rgba(255, 255, 255, 0.12);
-  --split-dark-text: #f4f5f7;
-  --split-dark-muted: #94a3b8;
+  /* Surfaces: Deep Smoked Obsidian with multi-tonal richness */
+  --bg-deep: #08090d;
+  --bg-surface: #0e1118;
+  --bg-card: rgba(18, 22, 31, 0.65);
+  --bg-card-hover: rgba(24, 30, 42, 0.85);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-glow: rgba(225, 29, 72, 0.35);
 
-  --split-light: #f5f2eb;
-  --split-light-surface: #ffffff;
-  --split-light-border: rgba(0, 0, 0, 0.12);
-  --split-light-text: #0e1013;
-  --split-light-muted: #575e6a;
+  /* Inks: Titanium White, Slate, and Muted Silver */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
 
-  /* Secondary Accent (Cardinal Red / Vermilion) */
+  /* Secondary Accent: Razor-sharp Cardinal Red / Vermilion */
   --accent-red: #e11d48;
-  --accent-red-dim: #be123c;
-  --accent-red-ink: #ffffff;
+  --accent-red-hover: #f43f5e;
+  --accent-red-dim: #9f1239;
   --accent-red-soft: rgba(225, 29, 72, 0.12);
-  --accent-red-glow: rgba(225, 29, 72, 0.4);
-
-  /* Editorial Print Markings */
-  --print-stamp-red: #e11d48;
-  --print-stamp-soft: rgba(225, 29, 72, 0.12);
-  --print-crosshair: rgba(0, 0, 0, 0.15);
+  --accent-red-glow: rgba(225, 29, 72, 0.45);
 
   /* Typography */
-  --font-editorial: 'Sora', sans-serif;
-  --font-marker: 'Caveat', cursive;
+  --font-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Martian Mono', monospace;
+
+  /* Layout & Radii */
+  --max-width: 1240px;
+  --header-height: 72px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 9999px;
+
+  /* Blur & Shadow */
+  --backdrop-blur: blur(28px);
+  --shadow-luxury: 0 24px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 ```
