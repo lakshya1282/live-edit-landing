@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>live-edit — Edit your site on the page. Save it to the code.</title>
+  <meta name="description" content="live-edit is an Antigravity skill that adds a click-to-edit layer to your localhost site and writes changes directly into your source files.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  
+  <!-- Fonts: Sora (Rounded grotesque with attitude) & Martian Mono (Code/AST) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lenis CSS & Script -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.9/dist/lenis.css">
+  <link rel="stylesheet" href="styles.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.9/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+</head>
+<body class="theme-minimalist-white">
+  <!-- Top Refractive Glass Header -->
+  <header class="site-header" id="header">
+    <div class="header-inner container">
+      <a href="#hero" class="brand-badge">
+        <span class="brand-pip"></span>
+        <span class="brand-name">live-edit</span>
+        <span class="brand-tag">v0.1.0</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#simulator" class="nav-link">Live Demo</a>
+        <a href="#problem" class="nav-link">The Problem</a>
+        <a href="#how-it-works" class="nav-link">How it works</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#comparison" class="nav-link">Chat vs live-edit</a>
+        <a href="#pipeline" class="nav-link">Architecture</a>
+        <a href="#install" class="nav-link">Install</a>
+        <a href="#docs" class="nav-link">Docs</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/lakshya1282/live-edit.git" target="_blank" rel="noreferrer" class="glass-btn glass-btn-subtle" title="View source on GitHub">
+          <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>Star</span>
+        </a>
+        <a href="#install" class="glass-btn glass-btn-primary">
+          <span>Get Started</span>
+          <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- SECTION 1: HERO -->
+    <section class="section-hero" id="hero">
+      <div class="container hero-content">
+        <div class="hero-badge-row">
+          <div class="glass-pill hero-eyebrow">
+            <span class="pill-dot"></span>
+            <span>A skill for Antigravity</span>
+          </div>
+          <div class="glass-pill hero-spec-pill">
+            <span class="mono-txt">Zero dependencies · Localhost only</span>
+          </div>
+        </div>
+
+        <h1 class="hero-title">
+          Edit your site on the page.<br>
+          <span class="hero-title-accent">Save it to the code.</span>
+        </h1>
+
+        <p class="hero-subtext">
+          live-edit adds a click-to-edit layer to your localhost site. Change a title, duplicate a card, disable a button, then hit save. The change lands in your source files, not in a chat message.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#install" class="glass-btn glass-btn-hero-primary">
+            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <span>Install the skill</span>
+          </a>
+          <a href="https://github.com/lakshya1282/live-edit.git" target="_blank" rel="noreferrer" class="glass-btn glass-btn-hero-secondary">
+            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            <span>View on GitHub</span>
+          </a>
+        </div>
+
+        <p class="hero-foot-note">Free and open source. Zero dependencies. Runs only on your machine.</p>
+      </div>
+
+      <!-- INTERACTIVE & ANIMATED LIVE-EDIT SHOWCASE STAGE -->
+      <div class="container simulator-wrapper" id="simulator">
+        <div class="simulator-header-bar">
+          <div class="sim-mode-toggle">
+            <button class="sim-toggle-btn active" id="btn-auto-sim" data-mode="auto">
+              <span class="pulse-indicator"></span>
+              <span>Auto Simulation</span>
+            </button>
+            <button class="sim-toggle-btn" id="btn-sandbox-sim" data-mode="sandbox">
+              <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              <span>Interactive Sandbox (Try It Live)</span>
+            </button>
+          </div>
+
+          <div class="sim-status-chip">
+            <span class="mono-txt">Proxy: <span class="text-pastel-mint">http://localhost:4321</span> &rarr; :3000</span>
+          </div>
+        </div>
+
+        <!-- The Liquid Glass Browser Frame -->
+        <div class="liquid-browser-frame" id="live-stage">
+          <!-- Browser Top Window Bar -->
+          <div class="browser-chrome">
+            <div class="window-controls">
+              <span class="window-dot dot-close"></span>
+              <span class="window-dot dot-min"></span>
+              <span class="window-dot dot-max"></span>
+            </div>
+
+            <div class="browser-address-bar">
+              <svg class="lock-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="url-protocol">http://</span>
+              <span class="url-host">localhost:4321</span>
+              <span class="url-path">/branches</span>
+              <span class="url-badge">live-edit proxy active</span>
+            </div>
+
+            <div class="browser-meta-tools">
+              <button class="browser-btn-icon" id="sim-reset-btn" title="Reset Sandbox Demo">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- The Rendered Website Canvas (Simulated Branches Page) -->
+          <div class="sim-webpage-viewport" id="webpage-canvas">
+            
+            <div class="sim-site-nav">
+              <div class="sim-site-logo">Acme Coffee Roasters</div>
+              <div class="sim-site-links">
+                <span>Menu</span>
+                <span class="active-link">Locations</span>
+                <span>Story</span>
+              </div>
+            </div>
+
+            <div class="sim-page-header">
+              <p class="sim-page-eyebrow">Our Locations</p>
+              <h2 class="sim-page-heading editable-target" id="demo-main-heading" data-filepath="src/Branches.jsx" data-line="18">
+                Visit any of our flagship roasteries
+              </h2>
+              <p class="sim-page-desc">Hand-crafted espresso, single-origin pour overs, and fresh pastries baked every dawn.</p>
+            </div>
+
+            <!-- The Grid of Branch Cards -->
+            <div class="sim-cards-grid" id="branches-grid">
+              
+              <!-- Card 1 (Target of Demo Animation) -->
+              <div class="sim-card card-target" id="branch-card-1" data-card-id="card-1">
+                <div class="sim-card-badge">Roastery 01</div>
+                <h3 class="sim-card-title editable-target" id="branch-title-1" data-filepath="src/Branches.jsx" data-line="42">
+                  Downtown Flagship
+                </h3>
+                <p class="sim-card-meta editable-target" id="branch-hours-1" data-filepath="src/Branches.jsx" data-line="44">
+                  Open until 8 PM
+                </p>
+                <p class="sim-card-address">412 Market Street, Financial District</p>
+                <div class="sim-card-footer">
+                  <button class="sim-card-btn action-target" id="branch-btn-1">Order Ahead</button>
+                  <span class="sim-status-tag">Pouring now</span>
+                </div>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="sim-card" id="branch-card-2" data-card-id="card-2">
+                <div class="sim-card-badge">Roastery 02</div>
+                <h3 class="sim-card-title editable-target" id="branch-title-2" data-filepath="src/Branches.jsx" data-line="56">
+                  Arts District Warehouse
+                </h3>
+                <p class="sim-card-meta editable-target" id="branch-hours-2" data-filepath="src/Branches.jsx" data-line="58">
+                  Open until 6 PM
+                </p>
+                <p class="sim-card-address">904 Traction Ave, DTLA</p>
+                <div class="sim-card-footer">
+                  <button class="sim-card-btn action-target" id="branch-btn-2">Order Ahead</button>
+                  <span class="sim-status-tag">Cupping Lab</span>
+                </div>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="sim-card" id="branch-card-3" data-card-id="card-3">
+                <div class="sim-card-badge">Roastery 03</div>
+                <h3 class="sim-card-title editable-target" id="branch-title-3" data-filepath="src/Branches.jsx" data-line="70">
+                  Mission Bay Tasting Room
+                </h3>
+                <p class="sim-card-meta editable-target" id="branch-hours-3" data-filepath="src/Branches.jsx" data-line="72">
+                  Open until 7 PM
+                </p>
+                <p class="sim-card-address">1280 4th St, Mission Bay</p>
+                <div class="sim-card-footer">
+                  <button class="sim-card-btn action-target" id="branch-btn-3">Order Ahead</button>
+                  <span class="sim-status-tag">Patio Open</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Virtual Animated Mouse Cursor -->
+            <div class="sim-virtual-cursor" id="virtual-cursor">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="#0a0c10" stroke="#ffffff" stroke-width="1.5">
+                <path d="M3 3l7 18 3-7 7-3L3 3z"/>
+              </svg>
+              <span class="sim-cursor-label">Developer</span>
+            </div>
+
+            <!-- Floating In-Situ Editor Toolbar (Positioned relative to selected element) -->
+            <div class="sim-floating-toolbar" id="sim-toolbar">
+              <button class="tool-btn" id="tool-edit-text" title="Edit text inline">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <span>Edit text</span>
+              </button>
+              <div class="tool-separator"></div>
+              <button class="tool-btn" id="tool-parent" title="Select parent element">
+                <span>Parent &uarr;</span>
+              </button>
+              <button class="tool-btn" id="tool-child" title="Select first child">
+                <span>Child &darr;</span>
+              </button>
+              <div class="tool-separator"></div>
+              <button class="tool-btn" id="tool-duplicate" title="Duplicate card">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Duplicate</span>
+              </button>
+              <button class="tool-btn" id="tool-delete" title="Delete card">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Delete</span>
+              </button>
+              <button class="tool-btn" id="tool-toggle-btn" title="Enable/Disable button">
+                <span>Disable</span>
+              </button>
+            </div>
+
+            <!-- In-Page Inline Editing Input Overlay -->
+            <div class="sim-inline-editor-box" id="sim-inline-editor">
+              <input type="text" id="sim-inline-input" autocomplete="off" spellcheck="false">
+              <span class="inline-editor-hint">Enter &crarr; confirm · Esc cancel</span>
+            </div>
+
+            <!-- Bottom Refractive Glass Live-Edit Control Bar (The actual live-edit HUD) -->
+            <div class="sim-bottom-hud" id="sim-hud">
+              <div class="hud-left">
+                <button class="hud-toggle-live active" id="hud-live-toggle">
+                  <span class="hud-live-dot"></span>
+                  <span class="hud-live-text">Live: <strong id="hud-live-state">on</strong></span>
+                </button>
+                <button class="hud-btn" id="hud-undo-btn">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+                  <span>Undo</span>
+                </button>
+              </div>
+
+              <div class="hud-center">
+                <div class="hud-changes-counter" id="hud-changes-pill">
+                  <span id="hud-change-count">0</span> changes waiting
+                </div>
+              </div>
+
+              <div class="hud-right">
+                <button class="hud-save-btn" id="hud-save-btn">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  <span>Save to code</span>
+                  <span class="hud-shortcut-key">Ctrl+S</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Result Panel (File & AST Telemetry Toast) -->
+            <div class="sim-result-panel" id="sim-result-panel">
+              <div class="result-panel-header">
+                <div class="result-panel-title">
+                  <span class="result-check">&check;</span>
+                  <span class="mono-txt" id="result-filename">src/Branches.jsx:44</span>
+                </div>
+                <button class="result-close-btn" id="result-close-btn">&times;</button>
+              </div>
+              <div class="result-panel-body">
+                <div class="result-status-row">
+                  <span class="result-tag tag-success">written in 11ms</span>
+                  <span class="result-method">AST precise string replace</span>
+                </div>
+                <div class="result-diff-block mono-txt" id="result-diff-text">
+                  <span class="diff-del">- Open until 8 PM</span><br>
+                  <span class="diff-add">+ Open until 10 PM Late Hours</span>
+                </div>
+                <div class="result-agent-hint" id="result-agent-hint">
+                  <span class="mono-txt">No agent needed · Saved directly to source</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="sim-caption-strip">
+          <div class="caption-item">
+            <span class="caption-num">1</span>
+            <span>Hover dashed boundary to inspect DOM node</span>
+          </div>
+          <div class="caption-item">
+            <span class="caption-num">2</span>
+            <span>Double click or press Edit Text to modify</span>
+          </div>
+          <div class="caption-item">
+            <span class="caption-num">3</span>
+            <span>Press Save to code (Ctrl+S) to commit to AST</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THE PROBLEM (DUAL FRICTION SPLIT) -->
+    <section class="section-problem" id="problem">
+      <div class="container">
+        <div class="section-header-compact">
+          <span class="glass-pill section-kicker">The Problem</span>
+          <h2 class="section-title">Small changes should not need a paragraph of instructions.</h2>
+          <p class="section-lead">
+            You are building with an AI agent. The layout is 90% right. Now you need a new heading, a different opening time on one card, one button turned off. Describing each tweak in chat is slower than just clicking it. live-edit lets you click it, then writes the change into the right file.
+          </p>
+        </div>
+
+        <div class="problem-contrast-grid">
+          <!-- Friction Card: Describe it in chat -->
+          <div class="contrast-card card-friction">
+            <div class="contrast-card-header">
+              <div class="contrast-badge badge-chat">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>Describing in Chat (~45s)</span>
+              </div>
+              <span class="friction-cost">High Friction</span>
+            </div>
+
+            <div class="contrast-chat-preview">
+              <div class="chat-bubble user-bubble">
+                "On the branches page, in the grid of cards, can you change the opening time of the first card from 8 PM to 10 PM, but make sure you only edit the first roastery and don't change the address, and also disable the Order Ahead button on the second card..."
+              </div>
+              <div class="chat-bubble agent-thinking-bubble">
+                <div class="thinking-spinner"></div>
+                <span>Agent parsing prompt, searching codebase, reviewing diff...</span>
+              </div>
+            </div>
+
+            <ul class="contrast-list">
+              <li>
+                <svg class="cross-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <span>Have to explain which card and which line</span>
+              </li>
+              <li>
+                <svg class="cross-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <span>Wait for LLM token generation & context reload</span>
+              </li>
+              <li>
+                <svg class="cross-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <span>Risk of editing the wrong duplicate string</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Flow Card: live-edit -->
+          <div class="contrast-card card-flow">
+            <div class="contrast-card-header">
+              <div class="contrast-badge badge-live">
+                <span class="pulse-indicator-emerald"></span>
+                <span>live-edit (~2s)</span>
+              </div>
+              <span class="flow-benefit">Zero Friction</span>
+            </div>
+
+            <div class="contrast-action-preview">
+              <div class="action-step-row">
+                <div class="step-badge">1</div>
+                <div class="step-text">Double-click "Open until 8 PM" & type "10 PM"</div>
+              </div>
+              <div class="action-step-row">
+                <div class="step-badge">2</div>
+                <div class="step-text">Press <span class="kbd-pill">Ctrl+S</span></div>
+              </div>
+              <div class="action-step-row step-confirmed">
+                <div class="step-badge-check">&check;</div>
+                <div class="step-text mono-txt text-pastel-mint">src/Branches.jsx:44 updated instantly</div>
+              </div>
+            </div>
+
+            <ul class="contrast-list">
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                <span>Click the element right on your running screen</span>
+              </li>
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                <span>Instant visual feedback with hot reload preserved</span>
+              </li>
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                <span>Surrounding DOM context matches the exact line safely</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: HOW IT WORKS (3-STEP TECTONIC LADDER) -->
+    <section class="section-how" id="how-it-works">
+      <div class="container">
+        <div class="section-header-compact">
+          <span class="glass-pill section-kicker">Workflow</span>
+          <h2 class="section-title">Three steps. No setup project.</h2>
+        </div>
+
+        <div class="steps-ladder-grid">
+          <!-- Step 1 -->
+          <div class="step-block">
+            <div class="step-number-glass">01</div>
+            <h3 class="step-title">Install</h3>
+            <p class="step-body">
+              Run one command in your project root. It adds the skill, an <code class="mono-code">npm run live</code> script, and a <code class="mono-code">.gitignore</code> line.
+            </p>
+            <div class="step-code-box">
+              <span class="code-prompt">$</span>
+              <code class="mono-code">node ../live-edit/skills/live-edit/scripts/live.mjs init</code>
+              <button class="code-copy-btn" data-copy="node ../live-edit/skills/live-edit/scripts/live.mjs init" title="Copy command">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-block">
+            <div class="step-number-glass">02</div>
+            <h3 class="step-title">Run</h3>
+            <p class="step-body">
+              Start your dev server, then <code class="mono-code">npm run live</code>. Open <code class="mono-code">localhost:4321</code>. Your site appears with the editor on top.
+            </p>
+            <div class="step-code-box">
+              <span class="code-prompt">$</span>
+              <code class="mono-code">npm run live</code>
+              <button class="code-copy-btn" data-copy="npm run live" title="Copy command">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-block">
+            <div class="step-number-glass">03</div>
+            <h3 class="step-title">Edit and save</h3>
+            <p class="step-body">
+              Click anything, change it, press Save. Text edits are written straight into your source. Adds, deletes and button changes go to your agent, which applies them in your code style.
+            </p>
+            <div class="step-code-box">
+              <span class="code-prompt">&rarr;</span>
+              <code class="mono-code">Press Ctrl+S to save to source</code>
+              <span class="step-key-badge">Ctrl+S</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: GIANT INTERACTIVE INDEX (LAYOUT SKELETON ROLL) -->
+    <section class="section-features" id="features">
+      <div class="container">
+        <div class="section-header-compact">
+          <span class="glass-pill section-kicker">Capabilities</span>
+          <h2 class="section-title">What you can change on the page</h2>
+          <p class="section-lead">Explore the complete eight-part operational capability matrix of live-edit.</p>
+        </div>
+
+        <!-- The Giant Expanding Index -->
+        <div class="feature-giant-index" id="feature-index">
+          
+          <!-- Item 1 -->
+          <div class="index-row active" data-feature="select">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">01</span>
+              <h3 class="index-title">Click to select</h3>
+              <p class="index-preview">Hover to highlight, click to select. Jump from a title up to its card or section with Parent.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>When live-edit is active, every DOM element gains an inspectable bounding box. Hovering illuminates a crisp dashed boundary. Clicking reveals the floating liquid glass toolbar with directional traversal:</p>
+                  <ul class="drawer-bullets">
+                    <li><strong>Parent &uarr;:</strong> Climbs the DOM tree from text node to wrapping <code class="mono-code">&lt;div class="card"&gt;</code> or <code class="mono-code">&lt;section&gt;</code>.</li>
+                    <li><strong>Child &darr;:</strong> Descends into the first inner text or interactive leaf node.</li>
+                  </ul>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock">
+                    <span class="tag-label">&lt;h3 class="title"&gt;</span>
+                    <div class="mock-highlight-box">
+                      <span>Downtown Flagship</span>
+                      <span class="mock-pill-parent">Parent &uarr;</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="index-row" data-feature="text">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">02</span>
+              <h3 class="index-title">Inline text editing</h3>
+              <p class="index-preview">Double-click any title, subtitle or paragraph and type. Enter confirms, Esc cancels.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>No modals, no complex form fields. Just double-click the copy directly in the flow of your layout. The element morphs into an in-situ input box with native typing feel, caret controls, and instant layout reflow preview.</p>
+                  <p class="mono-txt text-secondary">Supports heading tags (h1-h6), paragraphs, spans, labels, and button labels.</p>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock">
+                    <div class="mock-input-field">
+                      <span class="text-typing">Open until 10 PM Late Hours</span><span class="mock-caret"></span>
+                    </div>
+                    <span class="text-xs text-tertiary">Enter confirms · Esc cancels</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="index-row" data-feature="cards">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">03</span>
+              <h3 class="index-title">Duplicate and delete cards</h3>
+              <p class="index-preview">Add a card by duplicating one. Remove a card in one click. Undo if you slip.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>Need a fourth pricing tier, or an extra testimonial? Select the whole card with Parent &uarr;, then press <strong>Duplicate</strong>. The clone is injected immediately, allowing you to double-click and customize its content.</p>
+                  <p>When saved, Antigravity synthesizes the new JSX element or appends the item to your existing JSON/data array while matching your exact code style.</p>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock">
+                    <div class="mock-card-dupe">
+                      <div class="mock-dupe-item">Card A (Existing)</div>
+                      <div class="mock-dupe-item item-new">+ Card B (Duplicated)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="index-row" data-feature="buttons">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">04</span>
+              <h3 class="index-title">Button state</h3>
+              <p class="index-preview">Enable or disable any button and save the state into your code.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>Select any button element to reveal the contextual <strong>Enable / Disable</strong> toggle. Toggle the disabled visual state instantly, hit save, and live-edit dispatches the change to your agent to set the <code class="mono-code">disabled</code> attribute or modify the controlling React/Vue state variable.</p>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock">
+                    <button class="mock-btn-disabled" disabled>Order Ahead (Disabled)</button>
+                    <span class="text-xs text-pastel-mint">disabled prop updated</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="index-row" data-feature="source">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">05</span>
+              <h3 class="index-title">Writes to your source</h3>
+              <p class="index-preview">Text edits are matched to the right file and line in JSX, TSX, HTML, Vue, Svelte, Astro, MDX and JSON.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>live-edit does not use a fake headless database. It locates the exact text in your local files using an AST-aware fuzzy matching algorithm that handles whitespace normalization, JSX bracket splits, and HTML entities (<code class="mono-code">&amp;apos;</code>, <code class="mono-code">&amp;amp;</code>).</p>
+                  <p class="mono-txt text-pastel-mint">&check; Zero guessing on ambiguous strings</p>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock mono-txt text-xs">
+                    <span class="text-tertiary">// src/Branches.jsx:42</span><br>
+                    &lt;h3&gt;<span class="text-pastel-mint">Downtown Flagship</span>&lt;/h3&gt;
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="index-row" data-feature="devserver">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">06</span>
+              <h3 class="index-title">Works with your dev server</h3>
+              <p class="index-preview">A local proxy sits in front of Next.js, Vite or any dev server. Hot reload keeps working.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>No bundler plugins to configure. <code class="mono-code">live.mjs</code> runs a lightweight reverse proxy on port 4321 that forwards all HTTP and WebSocket traffic to your upstream dev server (Vite, Next.js, Astro, Remix, Webpack). Fast Refresh and HMR remain 100% active.</p>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock mono-txt text-xs">
+                    Next.js (:3000) &larr; <span class="text-pastel-mint">Proxy (:4321)</span> &rarr; Browser
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 7 -->
+          <div class="index-row" data-feature="telemetry">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">07</span>
+              <h3 class="index-title">Always shows what happened</h3>
+              <p class="index-preview">After Save, a panel lists every file and line written, and every change waiting for the agent.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>Total transparency. After every save, a floating telemetry drawer itemizes written files with line numbers. If an item needs agent assistance or has multiple matches, it is categorized clearly:</p>
+                  <ul class="drawer-bullets">
+                    <li><code class="text-pastel-mint mono-code">&check; src/File:line</code> — Written directly.</li>
+                    <li><code class="text-pastel-amber mono-code">&Delta; queued</code> — Structural change waiting for agent.</li>
+                    <li><code class="text-pastel-rose mono-code">&Delta; notfound</code> — Text is from CMS or API.</li>
+                  </ul>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock mono-txt text-xs">
+                    <span class="text-pastel-mint">&check; src/Branches.jsx:42</span><br>
+                    <span class="text-tertiary">1 file written, 0 queued</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 8 -->
+          <div class="index-row" data-feature="privacy">
+            <div class="index-row-summary">
+              <span class="index-num mono-txt">08</span>
+              <h3 class="index-title">Local and private</h3>
+              <p class="index-preview">Binds to 127.0.0.1. Writes need a per-session token. Nothing leaves your machine.</p>
+              <span class="index-chevron"></span>
+            </div>
+            <div class="index-row-drawer">
+              <div class="drawer-content-grid">
+                <div class="drawer-text">
+                  <p>Zero telemetry, zero external network requests, zero accounts. The proxy exclusively binds to <code class="mono-code">127.0.0.1</code>. Each edit session generates an ephemeral cryptographic authentication token to prevent unauthorized writes from other tabs.</p>
+                </div>
+                <div class="drawer-visual">
+                  <div class="mini-inspect-mock mono-txt text-xs">
+                    <span class="text-pastel-mint">127.0.0.1 ONLY</span><br>
+                    <span class="text-secondary">Token: sha256_session_local</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: WHY NOT JUST ASK THE AGENT? (COMPARISON MATRIX) -->
+    <section class="section-comparison" id="comparison">
+      <div class="container">
+        <div class="section-header-compact">
+          <span class="glass-pill section-kicker">Head to Head</span>
+          <h2 class="section-title">Click it, don't describe it.</h2>
+          <p class="section-lead">See how direct in-situ editing compares to traditional chat prompting.</p>
+        </div>
+
+        <div class="matrix-table-card">
+          <div class="matrix-table-wrapper" data-lenis-prevent>
+            <table class="glass-matrix-table">
+              <thead>
+                <tr>
+                  <th class="col-action">Action</th>
+                  <th class="col-chat">Describe it in chat</th>
+                  <th class="col-live">live-edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-action"><strong>Pick the element</strong></td>
+                  <td class="col-chat">Explain which card and which line in prose</td>
+                  <td class="col-live"><span class="table-pill-mint">&check; Click it</span></td>
+                </tr>
+                <tr>
+                  <td class="col-action"><strong>See the result</strong></td>
+                  <td class="col-chat">Wait for response, then reload page</td>
+                  <td class="col-live"><span class="table-pill-mint">&check; Instant on the page</span></td>
+                </tr>
+                <tr>
+                  <td class="col-action"><strong>Change one word</strong></td>
+                  <td class="col-chat">Write prompt, review code diff</td>
+                  <td class="col-live"><span class="table-pill-mint">&check; Double-click, type, save</span></td>
+                </tr>
+                <tr>
+                  <td class="col-action"><strong>Duplicate a card</strong></td>
+                  <td class="col-chat">Describe card data schema and structure</td>
+                  <td class="col-live"><span class="table-pill-mint">&check; One click, agent updates data</span></td>
+                </tr>
+                <tr>
+                  <td class="col-action"><strong>Same text on many cards</strong></td>
+                  <td class="col-chat">Risk of agent editing the wrong card instance</td>
+                  <td class="col-live"><span class="table-pill-mint">&check; Matched using the surrounding card</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: ARCHITECTURE & DATA PIPELINE -->
+    <section class="section-pipeline" id="pipeline">
+      <div class="container">
+        <div class="section-header-compact">
+          <span class="glass-pill section-kicker">Architecture</span>
+          <h2 class="section-title">How the pieces connect</h2>
+          <p class="section-lead">A local proxy, an in-page script, and an agent loop working in deterministic harmony.</p>
+        </div>
+
+        <div class="pipeline-canvas-card">
+          <div class="pipeline-flow-diagram">
+            
+            <!-- Node 1: Browser Editor -->
+            <div class="pipeline-node node-browser">
+              <div class="node-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="node-title">Browser Editor</div>
+              <div class="node-desc">Injected overlay captures clicks, inline text edits, and DOM clones</div>
+              <div class="node-pill">Port 4321</div>
+            </div>
+
+            <div class="pipeline-connector">
+              <span class="connector-line"></span>
+              <span class="connector-label">HTTP /save (POST)</span>
+            </div>
+
+            <!-- Node 2: Local Proxy -->
+            <div class="pipeline-node node-proxy">
+              <div class="node-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+              <div class="node-title">live.mjs Proxy</div>
+              <div class="node-desc">AST string search & file matching engine</div>
+              <div class="node-pill">Node 18+</div>
+            </div>
+
+            <div class="pipeline-fork">
+              <!-- Top Branch: Direct AST Write -->
+              <div class="fork-branch branch-top">
+                <div class="branch-line-horiz"></div>
+                <div class="pipeline-node node-result">
+                  <div class="node-status text-pastel-mint">&check; Exact text match</div>
+                  <div class="node-title">Direct Source Write</div>
+                  <div class="node-desc">Written straight to JSX, TSX, HTML, Vue, Astro in &lt;15ms</div>
+                </div>
+              </div>
+
+              <!-- Bottom Branch: Agent Queue -->
+              <div class="fork-branch branch-bottom">
+                <div class="branch-line-horiz"></div>
+                <div class="pipeline-node node-agent">
+                  <div class="node-status text-pastel-amber">&Delta; Duplicate / delete / ambiguous</div>
+                  <div class="node-title">.live/pending.json &rarr; Antigravity</div>
+                  <div class="node-desc">Agent applies structural changes matching your project's coding style</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: INSTALLATION & COMMANDS -->
+    <section class="section-install" id="install">
+      <div class="container">
+        <div class="section-header-compact">
+          <span class="glass-pill section-kicker">Quickstart</span>
+          <h2 class="section-title">Install live-edit in two minutes</h2>
+          <p class="section-lead">Add to any web project with a dev server. No dependencies to add to your app.</p>
+        </div>
+
+        <div class="install-terminal-card">
+          <div class="terminal-nav-tabs" data-lenis-prevent>
+            <button class="term-tab active" data-tab="step-git">Step 1: Clone</button>
+            <button class="term-tab" data-tab="step-init">Step 2: Init in Project</button>
+            <button class="term-tab" data-tab="step-run">Step 3: Run & Edit</button>
+            <button class="term-tab" data-tab="step-cli">CLI Reference</button>
+          </div>
+
+          <div class="terminal-body" id="terminal-content">
+            <!-- Tab 1: Clone -->
+            <div class="term-tab-pane active" id="pane-step-git">
+              <div class="term-code-snippet">
+                <div class="code-line"><span class="c-comment"># Clone the skill repo to your computer</span></div>
+                <div class="code-line"><span class="c-prompt">$</span> <span class="c-cmd">git clone https://github.com/lakshya1282/live-edit.git</span></div>
+              </div>
+              <button class="glass-copy-action" data-copy="git clone https://github.com/lakshya1282/live-edit.git">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy Command</span>
+              </button>
+            </div>
+
+            <!-- Tab 2: Init -->
+            <div class="term-tab-pane" id="pane-step-init">
+              <div class="term-code-snippet">
+                <div class="code-line"><span class="c-comment"># In your website project root:</span></div>
+                <div class="code-line"><span class="c-prompt">$</span> <span class="c-cmd">cd your-website</span></div>
+                <div class="code-line"><span class="c-prompt">$</span> <span class="c-cmd">node ../live-edit/skills/live-edit/scripts/live.mjs init</span></div>
+                <div class="code-line"><span class="c-comment"># Copies skill to .agent/skills/live-edit/ & adds npm run live</span></div>
+              </div>
+              <button class="glass-copy-action" data-copy="node ../live-edit/skills/live-edit/scripts/live.mjs init">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy Command</span>
+              </button>
+            </div>
+
+            <!-- Tab 3: Run -->
+            <div class="term-tab-pane" id="pane-step-run">
+              <div class="term-code-snippet">
+                <div class="code-line"><span class="c-comment"># Terminal 1: Start your normal dev server</span></div>
+                <div class="code-line"><span class="c-prompt">$</span> <span class="c-cmd">npm run dev</span></div>
+                <div class="code-line"><span class="c-comment"># Terminal 2: Start the live-edit proxy</span></div>
+                <div class="code-line"><span class="c-prompt">$</span> <span class="c-cmd">npm run live</span></div>
+                <div class="code-line"><span class="c-comment"># Open http://localhost:4321 & tell Antigravity: "start live-edit"</span></div>
+              </div>
+              <button class="glass-copy-action" data-copy="npm run live">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy Command</span>
+              </button>
+            </div>
+
+            <!-- Tab 4: CLI -->
+            <div class="term-tab-pane" id="pane-step-cli">
+              <div class="term-code-snippet">
+                <div class="code-line"><span class="c-cmd">live.mjs init</span>                      <span class="c-comment"># Installs skill & adds npm run live</span></div>
+                <div class="code-line"><span class="c-cmd">live.mjs start [--target URL] [--port N]</span> <span class="c-comment"># Starts editor proxy (default 4321)</span></div>
+                <div class="code-line"><span class="c-cmd">live.mjs wait [--timeout SECS]</span>        <span class="c-comment"># Waits for queued agent changes</span></div>
+                <div class="code-line"><span class="c-cmd">live.mjs pending</span>                     <span class="c-comment"># Inspects pending queue</span></div>
+                <div class="code-line"><span class="c-cmd">live.mjs done [id...]</span>                <span class="c-comment"># Clears completed items</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="install-options-strip">
+          <div class="opt-card">
+            <span class="opt-name mono-txt">--target http://localhost:5173</span>
+            <span class="opt-desc">Specify upstream dev server URL if not auto-detected</span>
+          </div>
+          <div class="opt-card">
+            <span class="opt-name mono-txt">--port 4400</span>
+            <span class="opt-desc">Set custom proxy port (recommended for Astro projects)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: FAQ -->
+    <section class="section-faq" id="docs">
+      <div class="container">
+        <div class="section-header-compact">
+          <span class="glass-pill section-kicker">Documentation & FAQ</span>
+          <h2 class="section-title">Frequently asked questions</h2>
+        </div>
+
+        <div class="faq-accordion-group">
+          
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="faq-question">Does it work with Next.js, Vite or plain HTML?</span>
+              <span class="faq-icon"></span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes. live-edit proxies whatever dev server you already run. If your text is in your source files (JSX, TSX, Vue, Svelte, Astro, HTML, Markdown, or JSON), it can be matched and written safely.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="faq-question">Does it change my production site?</span>
+              <span class="faq-icon"></span>
+            </button>
+            <div class="faq-answer">
+              <p>No. The editor only exists on the proxy port (4321). Your real dev server, production builds, and bundle output are completely untouched and clean.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="faq-question">What does it add to my project?</span>
+              <span class="faq-icon"></span>
+            </button>
+            <div class="faq-answer">
+              <p>Just three lightweight things: a <code class="mono-code">.agent/skills/live-edit</code> folder containing the skill instructions and proxy script, a single <code class="mono-code">"live"</code> script in your <code class="mono-code">package.json</code>, and an entry for <code class="mono-code">.live/</code> in your <code class="mono-code">.gitignore</code>.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="faq-question">Do I need Antigravity?</span>
+              <span class="faq-icon"></span>
+            </button>
+            <div class="faq-answer">
+              <p>Text edits save straight to your files without any AI agent required! Duplicate, delete, and button state changes are queued for an agent to apply in your code style, so you need Antigravity (or another agent supporting SKILL.md) for structural modifications.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="faq-question">What if my text comes from a CMS or database?</span>
+              <span class="faq-icon"></span>
+            </button>
+            <div class="faq-answer">
+              <p>Then it is not in your local source code. live-edit transparently reports that it could not find the text in your source files and does not guess, preventing unwanted file corruption.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: FINAL CALL TO ACTION -->
+    <section class="section-cta" id="cta">
+      <div class="container">
+        <div class="cta-glass-card">
+          <div class="cta-content">
+            <span class="glass-pill cta-badge">Stop describing. Start clicking.</span>
+            <h2 class="cta-title">Turn localhost into a visual editor today.</h2>
+            <p class="cta-sub">
+              Open source, zero telemetry, runs purely on your machine. Compatible with Next.js, Vite, Astro, Vue, and Svelte.
+            </p>
+
+            <div class="cta-actions">
+              <a href="#install" class="glass-btn glass-btn-hero-primary">
+                <span>Install the skill</span>
+                <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="https://github.com/lakshya1282/live-edit.git" target="_blank" rel="noreferrer" class="glass-btn glass-btn-hero-secondary">
+                <span>View on GitHub</span>
+              </a>
+            </div>
+
+            <div class="cta-install-bar">
+              <span class="mono-txt text-tertiary">$</span>
+              <code class="mono-code">git clone https://github.com/lakshya1282/live-edit.git</code>
+              <button class="mini-copy-btn" data-copy="git clone https://github.com/lakshya1282/live-edit.git" title="Copy git clone command">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <div class="brand-badge">
+          <span class="brand-pip"></span>
+          <span class="brand-name">live-edit</span>
+        </div>
+        <p class="footer-subline">live-edit is open source and runs on localhost. Built for Antigravity.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#simulator">Simulator</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#features">Capabilities</a>
+        <a href="#install">Install</a>
+        <a href="#docs">Docs</a>
+        <a href="https://github.com/lakshya1282/live-edit.git" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+
+      <div class="footer-right">
+        <span class="license-badge mono-txt">MIT Licensed · Nov 2026</span>
+      </div>
+    </div>
+
+    <!-- Footer Bottom Attribution -->
+    <div class="container footer-bottom">
+      <div class="footer-attribution">
+        <span class="attribution-label">Created by</span>
+        <a href="https://instagram.com/web_pros" target="_blank" rel="noopener noreferrer" class="creator-badge" title="Visit @web_pros on Instagram">
+          <svg class="instagram-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          <span class="creator-handle">@web_pros</span>
+          <span class="creator-platform">(instagram)</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
+

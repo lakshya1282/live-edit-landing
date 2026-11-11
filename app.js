@@ -1,0 +1,753 @@
+/**
+ * live-edit — Interactive Living Glass Engine & Live-Edit Simulator
+ * Clean-room implementation featuring automated walkthrough loop & full interactive sandbox
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Initialize Lenis Smooth Scroll
+  let lenisInstance = null;
+  if (typeof Lenis !== 'undefined') {
+    lenisInstance = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+      infinite: false,
+    });
+
+    window.lenis = lenisInstance;
+
+    function raf(time) {
+      lenisInstance.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Sync with GSAP ScrollTrigger if present
+    if (typeof ScrollTrigger !== 'undefined') {
+      lenisInstance.on('scroll', ScrollTrigger.update);
+    }
+
+    // Intercept internal hash links for smooth Lenis gliding
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', function (e) {
+        const hash = this.getAttribute('href');
+        if (!hash || hash === '#') return;
+        const target = document.querySelector(hash);
+        if (target) {
+          e.preventDefault();
+          lenisInstance.scrollTo(target, {
+            offset: -84, // Header clearance
+            duration: 1.2,
+          });
+          if (history.pushState) {
+            history.pushState(null, null, hash);
+          }
+        }
+      });
+    });
+  }
+
+  // 2. State & References
+  const stage = document.getElementById('live-stage');
+  const webpageCanvas = document.getElementById('webpage-canvas');
+  const virtualCursor = document.getElementById('virtual-cursor');
+  const simToolbar = document.getElementById('sim-toolbar');
+  const inlineEditor = document.getElementById('sim-inline-editor');
+  const inlineInput = document.getElementById('sim-inline-input');
+  const simResultPanel = document.getElementById('sim-result-panel');
+  const hudSaveBtn = document.getElementById('hud-save-btn');
+  const hudChangeCount = document.getElementById('hud-change-count');
+  const hudLiveToggle = document.getElementById('hud-live-toggle');
+  const hudLiveState = document.getElementById('hud-live-state');
+  const hudUndoBtn = document.getElementById('hud-undo-btn');
+  const resultCloseBtn = document.getElementById('result-close-btn');
+  const resultFilename = document.getElementById('result-filename');
+  const resultDiffText = document.getElementById('result-diff-text');
+  const resultAgentHint = document.getElementById('result-agent-hint');
+  const branchesGrid = document.getElementById('branches-grid');
+
+  const btnAutoSim = document.getElementById('btn-auto-sim');
+  const btnSandboxSim = document.getElementById('btn-sandbox-sim');
+  const simResetBtn = document.getElementById('sim-reset-btn');
+
+  let currentMode = 'auto'; // 'auto' | 'sandbox'
+  let autoSimTimeout = null;
+  let autoSimTimeline = [];
+  let isEditingInline = false;
+  let selectedElement = null;
+  let pendingChanges = [];
+  let undoHistory = [];
+  let initialCardHtml = branchesGrid ? branchesGrid.innerHTML : '';
+
+  // ==========================================================================
+  // Automated Walkthrough Animation Loop
+  // ==========================================================================
+
+  function clearAutoSim() {
+    autoSimTimeline.forEach(t => clearTimeout(t));
+    autoSimTimeline = [];
+    if (autoSimTimeout) clearTimeout(autoSimTimeout);
+  }
+
+  function startAutoSimulation() {
+    clearAutoSim();
+    if (currentMode !== 'auto' || !virtualCursor || !stage) return;
+
+    // Reset visual state
+    virtualCursor.style.display = 'flex';
+    virtualCursor.style.opacity = '1';
+    closeInlineEditor(false);
+    deselectAll();
+    hideResultPanel();
+    updateHudCount(0);
+    pendingChanges = [];
+
+    const targetEl = document.getElementById('branch-hours-1');
+    if (!targetEl) return;
+    targetEl.textContent = 'Open until 8 PM';
+
+    // Timeline sequence
+    function schedule(fn, delay) {
+      const id = setTimeout(fn, delay);
+      autoSimTimeline.push(id);
+    }
+
+    // Step 1: Cursor starts top-left
+    schedule(() => {
+      setCursorPos(40, 40);
+    }, 100);
+
+    // Step 2: Cursor glides towards "Open until 8 PM"
+    schedule(() => {
+      const rect = getRelativeRect(targetEl, webpageCanvas);
+      animateCursorTo(rect.left + 50, rect.top + rect.height / 2, 1100, () => {
+        targetEl.classList.add('sim-hovered');
+      });
+    }, 800);
+
+    // Step 3: Hover and select
+    schedule(() => {
+      targetEl.classList.remove('sim-hovered');
+      selectElement(targetEl);
+    }, 2200);
+
+    // Step 4: Click "Edit text" in floating toolbar
+    schedule(() => {
+      const editBtn = document.getElementById('tool-edit-text');
+      const btnRect = getRelativeRect(editBtn, webpageCanvas);
+      animateCursorTo(btnRect.left + 25, btnRect.top + 12, 600, () => {
+        openInlineEditor(targetEl);
+      });
+    }, 3100);
+
+    // Step 5: Type "Open until 10 PM Late Hours"
+    schedule(() => {
+      if (!inlineInput) return;
+      const original = 'Open until 8 PM';
+      const replacement = 'Open until 10 PM Late Hours';
+      let idx = original.length;
+
+      // Delete back to "Open until "
+      function backspace(callback) {
+        if (idx > 11) {
+          idx--;
+          inlineInput.value = original.slice(0, idx);
+          setTimeout(() => backspace(callback), 70);
+        } else {
+          setTimeout(callback, 120);
+        }
+      }
+
+      backspace(() => {
+        let typeIdx = 11;
+        function typeChar() {
+          if (typeIdx < replacement.length) {
+            typeIdx++;
+            inlineInput.value = replacement.slice(0, typeIdx);
+            setTimeout(typeChar, 65);
+          } else {
+            // Confirm edit
+            setTimeout(() => {
+              targetEl.textContent = replacement;
+              closeInlineEditor(true);
+              recordChange({
+                type: 'text',
+                element: targetEl,
+                file: targetEl.getAttribute('data-filepath') || 'src/Branches.jsx',
+                line: targetEl.getAttribute('data-line') || '44',
+                oldVal: original,
+                newVal: replacement
+              });
+            }, 300);
+          }
+        }
+        typeChar();
+      });
+    }, 4000);
+
+    // Step 6: Move cursor down to Save to code button
+    schedule(() => {
+      const rect = getRelativeRect(hudSaveBtn, webpageCanvas);
+      animateCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2, 1000, () => {
+        hudSaveBtn.classList.add('save-pulse');
+        setTimeout(() => hudSaveBtn.classList.remove('save-pulse'), 450);
+        triggerSaveAction();
+      });
+    }, 7200);
+
+    // Step 7: Wait and restart loop
+    schedule(() => {
+      startAutoSimulation();
+    }, 13000);
+  }
+
+  function setCursorPos(x, y) {
+    if (!virtualCursor) return;
+    virtualCursor.style.left = `${x}px`;
+    virtualCursor.style.top = `${y}px`;
+  }
+
+  function animateCursorTo(targetX, targetY, duration, onComplete) {
+    if (!virtualCursor) return;
+    const startX = parseFloat(virtualCursor.style.left) || 40;
+    const startY = parseFloat(virtualCursor.style.top) || 40;
+    const startTime = performance.now();
+
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Spring / smooth ease
+      const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      const currentX = startX + (targetX - startX) * ease;
+      const currentY = startY + (targetY - startY) * ease;
+      setCursorPos(currentX, currentY);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        if (onComplete) onComplete();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function getRelativeRect(element, container) {
+    if (!element || !container) return { left: 0, top: 0, width: 0, height: 0 };
+    const elRect = element.getBoundingClientRect();
+    const contRect = container.getBoundingClientRect();
+    return {
+      left: elRect.left - contRect.left + container.scrollLeft,
+      top: elRect.top - contRect.top + container.scrollTop,
+      width: elRect.width,
+      height: elRect.height,
+    };
+  }
+
+  // ==========================================================================
+  // Selection, Toolbar & Inline Editor Mechanics
+  // ==========================================================================
+
+  function deselectAll() {
+    if (selectedElement) {
+      selectedElement.classList.remove('sim-selected');
+      selectedElement = null;
+    }
+    if (simToolbar) simToolbar.style.display = 'none';
+  }
+
+  function selectElement(el) {
+    deselectAll();
+    if (!el || !simToolbar) return;
+
+    selectedElement = el;
+    el.classList.add('sim-selected');
+
+    // Position floating toolbar above selected element
+    const rect = getRelativeRect(el, webpageCanvas);
+    simToolbar.style.display = 'inline-flex';
+    simToolbar.style.left = `${Math.max(10, rect.left)}px`;
+    simToolbar.style.top = `${rect.top}px`;
+
+    // Configure toolbar action availability based on element type
+    const isText = el.classList.contains('editable-target');
+    const isCard = el.classList.contains('sim-card');
+    const isBtn = el.tagName === 'BUTTON' || el.classList.contains('sim-card-btn');
+
+    const editBtn = document.getElementById('tool-edit-text');
+    const parentBtn = document.getElementById('tool-parent');
+    const childBtn = document.getElementById('tool-child');
+    const dupeBtn = document.getElementById('tool-duplicate');
+    const delBtn = document.getElementById('tool-delete');
+    const toggleBtn = document.getElementById('tool-toggle-btn');
+
+    if (editBtn) editBtn.style.display = isText ? 'inline-flex' : 'none';
+    if (dupeBtn) dupeBtn.style.display = isCard ? 'inline-flex' : 'none';
+    if (delBtn) delBtn.style.display = isCard ? 'inline-flex' : 'none';
+    if (toggleBtn) toggleBtn.style.display = isBtn ? 'inline-flex' : 'none';
+
+    if (isBtn && toggleBtn) {
+      toggleBtn.textContent = el.disabled ? 'Enable' : 'Disable';
+    }
+  }
+
+  function openInlineEditor(el) {
+    if (!el || !inlineEditor || !inlineInput) return;
+    isEditingInline = true;
+    const rect = getRelativeRect(el, webpageCanvas);
+
+    inlineEditor.style.display = 'block';
+    inlineEditor.style.left = `${rect.left}px`;
+    inlineEditor.style.top = `${rect.top}px`;
+    inlineEditor.style.width = `${Math.max(rect.width + 20, 200)}px`;
+
+    inlineInput.value = el.textContent.trim();
+    if (currentMode === 'sandbox') {
+      inlineInput.focus();
+      inlineInput.select();
+    }
+  }
+
+  function closeInlineEditor(commit = true) {
+    if (!isEditingInline || !inlineEditor) return;
+    isEditingInline = false;
+
+    if (commit && selectedElement && inlineInput) {
+      const newVal = inlineInput.value.trim();
+      const oldVal = selectedElement.textContent.trim();
+      if (newVal !== oldVal) {
+        selectedElement.textContent = newVal;
+        recordChange({
+          type: 'text',
+          element: selectedElement,
+          file: selectedElement.getAttribute('data-filepath') || 'src/Branches.jsx',
+          line: selectedElement.getAttribute('data-line') || '42',
+          oldVal,
+          newVal
+        });
+      }
+    }
+    inlineEditor.style.display = 'none';
+  }
+
+  function recordChange(change) {
+    pendingChanges.push(change);
+    undoHistory.push(change);
+    updateHudCount(pendingChanges.length);
+  }
+
+  function updateHudCount(count) {
+    if (hudChangeCount) hudChangeCount.textContent = count;
+  }
+
+  function triggerSaveAction() {
+    if (pendingChanges.length === 0) {
+      // Mock save even if 0 for immediate gratification
+      showResultToast({
+        file: 'src/Branches.jsx:42',
+        diffDel: '- Open until 8 PM',
+        diffAdd: '+ Open until 10 PM Late Hours',
+        agentNote: 'No agent needed · Saved directly to source'
+      });
+      return;
+    }
+
+    const last = pendingChanges[pendingChanges.length - 1];
+    let diffDel = '- ' + (last.oldVal || 'Original content');
+    let diffAdd = '+ ' + (last.newVal || 'Updated content');
+    let agentNote = 'No agent needed · Saved directly to source';
+
+    if (last.type === 'duplicate') {
+      diffDel = '// Added sibling card element';
+      diffAdd = '+ <RoasteryCard id="branch-dupe" title="' + last.newVal + '" />';
+      agentNote = 'Queued for agent (.live/pending.json) · Added to array';
+    } else if (last.type === 'delete') {
+      diffDel = '- <RoasteryCard id="' + last.oldVal + '" />';
+      diffAdd = '// Removed card element';
+      agentNote = 'Queued for agent · Element removed from JSX';
+    } else if (last.type === 'button') {
+      diffDel = last.oldVal ? 'disabled={true}' : 'disabled={false}';
+      diffAdd = last.newVal ? 'disabled={true}' : 'disabled={false}';
+      agentNote = 'Queued for agent · Updated disabled prop';
+    }
+
+    showResultToast({
+      file: (last.file || 'src/Branches.jsx') + ':' + (last.line || '44'),
+      diffDel,
+      diffAdd,
+      agentNote
+    });
+
+    pendingChanges = [];
+    updateHudCount(0);
+  }
+
+  function showResultToast({ file, diffDel, diffAdd, agentNote }) {
+    if (!simResultPanel) return;
+    if (resultFilename) resultFilename.textContent = file;
+    if (resultDiffText) {
+      resultDiffText.innerHTML = `<span class="diff-del">${escapeHtml(diffDel)}</span><br><span class="diff-add">${escapeHtml(diffAdd)}</span>`;
+    }
+    if (resultAgentHint) {
+      resultAgentHint.innerHTML = `<span class="mono-txt">${escapeHtml(agentNote)}</span>`;
+    }
+    simResultPanel.style.display = 'block';
+  }
+
+  function hideResultPanel() {
+    if (simResultPanel) simResultPanel.style.display = 'none';
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ==========================================================================
+  // Mode Switcher (Auto Demo vs Interactive Sandbox)
+  // ==========================================================================
+
+  if (btnAutoSim && btnSandboxSim) {
+    btnAutoSim.addEventListener('click', () => {
+      currentMode = 'auto';
+      btnAutoSim.classList.add('active');
+      btnSandboxSim.classList.remove('active');
+      startAutoSimulation();
+    });
+
+    btnSandboxSim.addEventListener('click', () => {
+      currentMode = 'sandbox';
+      btnSandboxSim.classList.add('active');
+      btnAutoSim.classList.remove('active');
+      clearAutoSim();
+      if (virtualCursor) virtualCursor.style.display = 'none';
+      deselectAll();
+      hideResultPanel();
+    });
+  }
+
+  // Reset sandbox button
+  if (simResetBtn) {
+    simResetBtn.addEventListener('click', () => {
+      if (branchesGrid && initialCardHtml) {
+        branchesGrid.innerHTML = initialCardHtml;
+      }
+      deselectAll();
+      closeInlineEditor(false);
+      hideResultPanel();
+      pendingChanges = [];
+      undoHistory = [];
+      updateHudCount(0);
+      if (currentMode === 'auto') startAutoSimulation();
+    });
+  }
+
+  // Result close button
+  if (resultCloseBtn) {
+    resultCloseBtn.addEventListener('click', hideResultPanel);
+  }
+
+  // ==========================================================================
+  // Interactive Sandbox Event Listeners (Direct Manipulation)
+  // ==========================================================================
+
+  if (webpageCanvas) {
+    // Hover dashed outlines
+    webpageCanvas.addEventListener('mouseover', (e) => {
+      if (currentMode !== 'sandbox') return;
+      const target = e.target.closest('.editable-target, .sim-card, .sim-card-btn');
+      if (target && target !== selectedElement) {
+        target.classList.add('sim-hovered');
+      }
+    });
+
+    webpageCanvas.addEventListener('mouseout', (e) => {
+      if (currentMode !== 'sandbox') return;
+      const target = e.target.closest('.editable-target, .sim-card, .sim-card-btn');
+      if (target) {
+        target.classList.remove('sim-hovered');
+      }
+    });
+
+    // Click select & double-click edit
+    webpageCanvas.addEventListener('click', (e) => {
+      if (currentMode !== 'sandbox') return;
+      if (e.target.closest('#sim-toolbar') || e.target.closest('#sim-inline-editor') || e.target.closest('#sim-bottom-hud') || e.target.closest('#sim-result-panel')) {
+        return;
+      }
+
+      const target = e.target.closest('.editable-target, .sim-card, .sim-card-btn');
+      if (target) {
+        target.classList.remove('sim-hovered');
+        selectElement(target);
+      } else {
+        deselectAll();
+        closeInlineEditor(true);
+      }
+    });
+
+    webpageCanvas.addEventListener('dblclick', (e) => {
+      if (currentMode !== 'sandbox') return;
+      const target = e.target.closest('.editable-target');
+      if (target) {
+        selectElement(target);
+        openInlineEditor(target);
+      }
+    });
+  }
+
+  // Toolbar button listeners
+  const toolEditText = document.getElementById('tool-edit-text');
+  const toolParent = document.getElementById('tool-parent');
+  const toolChild = document.getElementById('tool-child');
+  const toolDuplicate = document.getElementById('tool-duplicate');
+  const toolDelete = document.getElementById('tool-delete');
+  const toolToggleBtn = document.getElementById('tool-toggle-btn');
+
+  if (toolEditText) {
+    toolEditText.addEventListener('click', () => {
+      if (selectedElement) openInlineEditor(selectedElement);
+    });
+  }
+
+  if (toolParent) {
+    toolParent.addEventListener('click', () => {
+      if (!selectedElement) return;
+      const parentCard = selectedElement.closest('.sim-card');
+      if (parentCard && selectedElement !== parentCard) {
+        selectElement(parentCard);
+      }
+    });
+  }
+
+  if (toolChild) {
+    toolChild.addEventListener('click', () => {
+      if (!selectedElement) return;
+      const firstChild = selectedElement.querySelector('.editable-target, .sim-card-title, h3, p');
+      if (firstChild) selectElement(firstChild);
+    });
+  }
+
+  if (toolDuplicate) {
+    toolDuplicate.addEventListener('click', () => {
+      if (!selectedElement || !selectedElement.classList.contains('sim-card')) return;
+      const clone = selectedElement.cloneNode(true);
+      const newId = 'branch-card-' + Date.now();
+      clone.id = newId;
+      const title = clone.querySelector('.sim-card-title');
+      if (title) title.textContent += ' (Copy)';
+
+      selectedElement.parentNode.insertBefore(clone, selectedElement.nextSibling);
+      selectElement(clone);
+
+      recordChange({
+        type: 'duplicate',
+        element: clone,
+        file: 'src/Branches.jsx',
+        line: '88',
+        oldVal: selectedElement.id,
+        newVal: title ? title.textContent : 'Duplicated Card'
+      });
+    });
+  }
+
+  if (toolDelete) {
+    toolDelete.addEventListener('click', () => {
+      if (!selectedElement || !selectedElement.classList.contains('sim-card')) return;
+      const cardId = selectedElement.id;
+      const cardEl = selectedElement;
+      cardEl.style.display = 'none';
+      deselectAll();
+
+      recordChange({
+        type: 'delete',
+        element: cardEl,
+        file: 'src/Branches.jsx',
+        line: '56',
+        oldVal: cardId,
+        newVal: ''
+      });
+    });
+  }
+
+  if (toolToggleBtn) {
+    toolToggleBtn.addEventListener('click', () => {
+      if (!selectedElement || (selectedElement.tagName !== 'BUTTON' && !selectedElement.classList.contains('sim-card-btn'))) return;
+      const wasDisabled = selectedElement.disabled;
+      selectedElement.disabled = !wasDisabled;
+      toolToggleBtn.textContent = selectedElement.disabled ? 'Enable' : 'Disable';
+
+      recordChange({
+        type: 'button',
+        element: selectedElement,
+        file: 'src/Branches.jsx',
+        line: '48',
+        oldVal: wasDisabled,
+        newVal: selectedElement.disabled
+      });
+    });
+  }
+
+  // Inline input keyboard shortcuts
+  if (inlineInput) {
+    inlineInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        closeInlineEditor(true);
+      } else if (e.key === 'Escape') {
+        closeInlineEditor(false);
+      }
+    });
+  }
+
+  // HUD Save Button listener
+  if (hudSaveBtn) {
+    hudSaveBtn.addEventListener('click', () => {
+      hudSaveBtn.classList.add('save-pulse');
+      setTimeout(() => hudSaveBtn.classList.remove('save-pulse'), 450);
+      triggerSaveAction();
+    });
+  }
+
+  // Global Keyboard shortcuts: Ctrl+S to save, Ctrl+Z to undo
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      if (hudSaveBtn) {
+        hudSaveBtn.classList.add('save-pulse');
+        setTimeout(() => hudSaveBtn.classList.remove('save-pulse'), 450);
+        triggerSaveAction();
+      }
+    } else if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+      if (undoHistory.length > 0) {
+        const last = undoHistory.pop();
+        if (last.type === 'text') {
+          last.element.textContent = last.oldVal;
+        } else if (last.type === 'duplicate') {
+          last.element.remove();
+        } else if (last.type === 'delete') {
+          last.element.style.display = 'block';
+        } else if (last.type === 'button') {
+          last.element.disabled = last.oldVal;
+        }
+        pendingChanges.pop();
+        updateHudCount(pendingChanges.length);
+      }
+    } else if (e.key === 'Escape') {
+      deselectAll();
+      closeInlineEditor(false);
+    }
+  });
+
+  // HUD Undo listener
+  if (hudUndoBtn) {
+    hudUndoBtn.addEventListener('click', () => {
+      if (undoHistory.length > 0) {
+        const last = undoHistory.pop();
+        if (last.type === 'text') {
+          last.element.textContent = last.oldVal;
+        } else if (last.type === 'duplicate') {
+          last.element.remove();
+        } else if (last.type === 'delete') {
+          last.element.style.display = 'block';
+        } else if (last.type === 'button') {
+          last.element.disabled = last.oldVal;
+        }
+        pendingChanges.pop();
+        updateHudCount(pendingChanges.length);
+      }
+    });
+  }
+
+  // ==========================================================================
+  // Section 4: Giant Interactive Index Accordion
+  // ==========================================================================
+
+  const indexRows = document.querySelectorAll('.feature-giant-index .index-row');
+  indexRows.forEach((row) => {
+    const summary = row.querySelector('.index-row-summary');
+    if (summary) {
+      summary.addEventListener('click', () => {
+        const isActive = row.classList.contains('active');
+        indexRows.forEach(r => r.classList.remove('active'));
+        if (!isActive) {
+          row.classList.add('active');
+        }
+      });
+    }
+  });
+
+  // ==========================================================================
+  // Section 7: Terminal Navigation Tabs
+  // ==========================================================================
+
+  const termTabs = document.querySelectorAll('.terminal-nav-tabs .term-tab');
+  const termPanes = document.querySelectorAll('.terminal-body .term-tab-pane');
+
+  termTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const targetId = tab.getAttribute('data-tab');
+      termTabs.forEach(t => t.classList.remove('active'));
+      termPanes.forEach(p => p.classList.remove('active'));
+
+      tab.classList.add('active');
+      const targetPane = document.getElementById('pane-' + targetId);
+      if (targetPane) targetPane.classList.add('active');
+    });
+  });
+
+  // ==========================================================================
+  // Section 8: FAQ Accordion Group
+  // ==========================================================================
+
+  const faqItems = document.querySelectorAll('.faq-accordion-group .faq-item');
+  faqItems.forEach((item) => {
+    const trigger = item.querySelector('.faq-trigger');
+    if (trigger) {
+      trigger.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        faqItems.forEach(i => i.classList.remove('open'));
+        if (!isOpen) {
+          item.classList.add('open');
+        }
+      });
+    }
+  });
+
+  // ==========================================================================
+  // Clipboard Copy Buttons with Animated Visual Feedback
+  // ==========================================================================
+
+  const copyButtons = document.querySelectorAll('[data-copy]');
+  copyButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const text = btn.getAttribute('data-copy');
+      if (!text) return;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const origContent = btn.innerHTML;
+        btn.innerHTML = `<span style="color: #a7f3d0; font-weight: 700;">&check; Copied!</span>`;
+        btn.style.borderColor = 'rgba(167, 243, 208, 0.4)';
+
+        setTimeout(() => {
+          btn.innerHTML = origContent;
+          btn.style.borderColor = '';
+        }, 2000);
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      });
+    });
+  });
+
+  // Start initial auto demo
+  startAutoSimulation();
+});
+

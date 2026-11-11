@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#059669" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  
+  <!-- Outer Rounded Tile with Specular Highlight -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#glassGrad)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
+  
+  <!-- Internal Top Specular Bevel -->
+  <path d="M18 4 H46 C54 4 60 10 60 18 V19 C60 11 54 5 46 5 H18 C10 5 4 11 4 19 V18 C4 10 10 4 18 4 Z" fill="rgba(255, 255, 255, 0.25)"/>
+  
+  <!-- Stylized Live Edit Brackets -->
+  <path d="M22 24 L14 32 L22 40" fill="none" stroke="#f8fafc" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 24 L50 32 L42 40" fill="none" stroke="#f8fafc" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- In-situ Live Glow Indicator -->
+  <circle cx="32" cy="32" r="5" fill="url(#mintGrad)" filter="url(#glow)"/>
+</svg>
+
