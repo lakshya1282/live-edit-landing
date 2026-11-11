@@ -2330,6 +2330,270 @@ button {
 }
 
 /* ==========================================================================
+   Optical Liquid Glass Refraction & Interactive Premium Polish
+   ========================================================================== */
+
+/* Optical Liquid Glass Spotlight (Refractive Sheen) */
+.glass-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-spotlight::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    480px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(255, 255, 255, 0.65),
+    transparent 80%
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  mix-blend-mode: overlay;
+}
+
+.glass-spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Floating Liquid Save Notification Toast */
+.liquid-save-toast {
+  position: absolute;
+  top: 56px;
+  right: 24px;
+  z-index: 95;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(5, 150, 105, 0.4);
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 1px 1px 0 #ffffff,
+    0 12px 32px rgba(5, 150, 105, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  opacity: 0;
+  transform: translateY(-12px) scale(0.96);
+  pointer-events: none;
+  transition: all 0.3s var(--ease-spring);
+}
+
+.liquid-save-toast.toast-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pastel-mint);
+  box-shadow: 0 0 8px rgba(5, 150, 105, 0.6);
+  flex-shrink: 0;
+}
+
+.toast-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.toast-ms {
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+}
+
+/* Sandbox Mode Active Hint Banner */
+.sandbox-hint-banner {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04), inset 0 1px 1px #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  animation: bannerFadeIn 0.3s var(--ease-spring);
+}
+
+.sandbox-hint-banner.active {
+  display: flex;
+}
+
+@keyframes bannerFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Live Speed Benchmark Widget */
+.benchmark-card {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 1px 1px 0 #ffffff,
+    0 10px 30px -4px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.benchmark-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.benchmark-lead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.benchmark-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--pastel-mint);
+  background: var(--pastel-mint-soft);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.benchmark-heading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.btn-benchmark {
+  font-size: 0.82rem;
+  padding: 8px 16px;
+}
+
+.benchmark-tracks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.benchmark-lane {
+  background: rgba(248, 250, 252, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: inset 0 1px 1px #ffffff;
+}
+
+.lane-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+}
+
+.lane-title {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.lane-timer {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.lane-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.lane-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  transition: width 0.08s linear;
+}
+
+.bar-chat {
+  background: #f87171;
+}
+
+.bar-live {
+  background: var(--pastel-mint);
+  box-shadow: 0 0 10px rgba(5, 150, 105, 0.5);
+}
+
+.lane-status {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  min-height: 16px;
+}
+
+/* Architecture Animated Data Pulse */
+.data-pulse-dot {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pastel-mint);
+  box-shadow: 0 0 10px var(--pastel-mint);
+  animation: pulseTravel 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes pulseTravel {
+  0% { left: 0%; opacity: 0; transform: scale(0.6); }
+  15% { opacity: 1; transform: scale(1.1); }
+  85% { opacity: 1; transform: scale(1.1); }
+  100% { left: 95%; opacity: 0; transform: scale(0.6); }
+}
+
+/* Multi-Bevel Specular Depth on Glass Components */
+.contrast-card, .step-block, .index-row, .pipeline-node, .pipeline-canvas-card, .cta-glass-card {
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 1.5px 1.5px 0 #ffffff,
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.02),
+    0 10px 30px -4px rgba(0, 0, 0, 0.035);
+  transition: transform 0.25s var(--ease-spring), box-shadow 0.25s var(--ease-spring), border-color 0.25s ease;
+}
+
+.step-block:hover, .contrast-card:hover, .pipeline-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    inset 0 1.5px 1.5px 0 #ffffff,
+    0 16px 36px -6px rgba(0, 0, 0, 0.06);
+}
+
+/* ==========================================================================
    Responsive Adaptations
    ========================================================================== */
 
@@ -2343,6 +2607,10 @@ button {
   }
 
   .problem-contrast-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .benchmark-tracks {
     grid-template-columns: 1fr;
   }
 

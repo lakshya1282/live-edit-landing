@@ -404,7 +404,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateHudCount(0);
   }
 
+  const liquidToast = document.getElementById('liquid-save-toast');
+  const toastFilename = document.getElementById('toast-filename');
+  const sandboxBanner = document.getElementById('sandbox-hint-banner');
+  let toastTimer = null;
+
+  function showFloatingToast(filename) {
+    if (!liquidToast) return;
+    if (toastFilename) toastFilename.textContent = filename || 'src/Branches.jsx:42';
+    liquidToast.classList.add('toast-active');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      liquidToast.classList.remove('toast-active');
+    }, 2800);
+  }
+
   function showResultToast({ file, diffDel, diffAdd, agentNote }) {
+    showFloatingToast(file);
     if (!simResultPanel) return;
     if (resultFilename) resultFilename.textContent = file;
     if (resultDiffText) {
@@ -433,6 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
       currentMode = 'auto';
       btnAutoSim.classList.add('active');
       btnSandboxSim.classList.remove('active');
+      if (sandboxBanner) sandboxBanner.classList.remove('active');
       startAutoSimulation();
     });
 
@@ -440,6 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
       currentMode = 'sandbox';
       btnSandboxSim.classList.add('active');
       btnAutoSim.classList.remove('active');
+      if (sandboxBanner) sandboxBanner.classList.add('active');
       clearAutoSim();
       if (virtualCursor) virtualCursor.style.display = 'none';
       deselectAll();
@@ -763,6 +781,122 @@ document.addEventListener('DOMContentLoaded', () => {
         document.execCommand('copy');
         document.body.removeChild(ta);
       });
+    });
+  });
+
+  // ==========================================================================
+  // Dynamic Optical Liquid Glass Spotlight (Refractive Cursor Sheen)
+  // ==========================================================================
+
+  document.querySelectorAll('.glass-spotlight').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--mouse-x', `-500px`);
+      card.style.setProperty('--mouse-y', `-500px`);
+    });
+  });
+
+  // ==========================================================================
+  // Interactive Live Speed Benchmark Race Controller
+  // ==========================================================================
+
+  const btnRunBenchmark = document.getElementById('btn-run-benchmark');
+  const timerChat = document.getElementById('timer-chat');
+  const timerLive = document.getElementById('timer-live');
+  const barChat = document.getElementById('bar-chat');
+  const barLive = document.getElementById('bar-live');
+  const statusChat = document.getElementById('status-chat');
+  const statusLive = document.getElementById('status-live');
+
+  let benchmarkRunning = false;
+
+  function runBenchmarkRace() {
+    if (benchmarkRunning) return;
+    benchmarkRunning = true;
+    if (btnRunBenchmark) {
+      btnRunBenchmark.disabled = true;
+      btnRunBenchmark.style.opacity = '0.6';
+    }
+
+    if (barChat) barChat.style.width = '0%';
+    if (barLive) barLive.style.width = '0%';
+    if (timerChat) timerChat.textContent = '0.0s';
+    if (timerLive) timerLive.textContent = '0.0s';
+    if (statusChat) statusChat.textContent = 'Typing prompt instruction...';
+    if (statusLive) statusLive.textContent = 'Double-click "Open until 8 PM"...';
+
+    const startTime = performance.now();
+
+    // Live edit completes in 0.8s
+    const liveInterval = setInterval(() => {
+      const elapsed = (performance.now() - startTime) / 1000;
+      if (elapsed <= 0.8) {
+        if (timerLive) timerLive.textContent = `${elapsed.toFixed(1)}s`;
+        if (barLive) barLive.style.width = `${(elapsed / 0.8) * 100}%`;
+        if (elapsed > 0.3 && statusLive) statusLive.textContent = 'Type "10 PM" & hit Ctrl+S...';
+      } else {
+        clearInterval(liveInterval);
+        if (timerLive) timerLive.textContent = '0.8s';
+        if (barLive) barLive.style.width = '100%';
+        if (statusLive) statusLive.innerHTML = '<strong style="color: var(--pastel-mint);">&check; Written to AST (0.8s) &mdash; 53x faster</strong>';
+      }
+    }, 40);
+
+    // Chat agent takes ~42.6s (simulated smoothly in ~4.5s for snappy UX demo)
+    const chatDuration = 4500;
+    const chatInterval = setInterval(() => {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(1, elapsed / chatDuration);
+      const simulatedSeconds = (progress * 42.6).toFixed(1);
+
+      if (timerChat) timerChat.textContent = `${simulatedSeconds}s`;
+      if (barChat) barChat.style.width = `${progress * 100}%`;
+
+      if (progress < 0.25) {
+        if (statusChat) statusChat.textContent = 'Explaining card #1 and opening hours...';
+      } else if (progress < 0.55) {
+        if (statusChat) statusChat.textContent = 'Agent queued, re-reading full project context...';
+      } else if (progress < 0.85) {
+        if (statusChat) statusChat.textContent = 'Scanning 14 files to resolve string ambiguity...';
+      } else if (progress < 1) {
+        if (statusChat) statusChat.textContent = 'Generating file diff and awaiting confirmation...';
+      } else {
+        clearInterval(chatInterval);
+        if (timerChat) timerChat.textContent = '42.6s';
+        if (barChat) barChat.style.width = '100%';
+        if (statusChat) statusChat.textContent = 'Completed in 42.6s (High token friction)';
+        benchmarkRunning = false;
+        if (btnRunBenchmark) {
+          btnRunBenchmark.disabled = false;
+          btnRunBenchmark.style.opacity = '1';
+        }
+      }
+    }, 50);
+  }
+
+  if (btnRunBenchmark) {
+    btnRunBenchmark.addEventListener('click', runBenchmarkRace);
+  }
+
+  // ==========================================================================
+  // Magnetic Micro-Interactions on Primary Glass Buttons
+  // ==========================================================================
+
+  document.querySelectorAll('.glass-btn-primary, .glass-btn-hero-primary').forEach((btn) => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = (e.clientX - rect.left - rect.width / 2) * 0.15;
+      const y = (e.clientY - rect.top - rect.height / 2) * 0.15;
+      btn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
     });
   });
 

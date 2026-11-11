@@ -114,7 +114,13 @@
         </div>
 
         <!-- The Liquid Glass Browser Frame -->
-        <div class="liquid-browser-frame" id="live-stage">
+        <div class="liquid-browser-frame glass-spotlight" id="live-stage">
+          <!-- Floating Liquid Save Notification Toast -->
+          <div class="liquid-save-toast" id="liquid-save-toast">
+            <span class="toast-pip"></span>
+            <span class="toast-text mono-txt">&check; <span id="toast-filename">src/Branches.jsx:42</span> updated <span class="toast-ms">(12ms)</span></span>
+          </div>
+
           <!-- Browser Top Window Bar -->
           <div class="browser-chrome">
             <div class="window-controls">
@@ -140,6 +146,11 @@
 
           <!-- The Rendered Website Canvas (Simulated Branches Page) -->
           <div class="sim-webpage-viewport" id="webpage-canvas" data-lenis-prevent>
+            <!-- Sandbox Mode Active Hint Banner -->
+            <div class="sandbox-hint-banner" id="sandbox-hint-banner">
+              <span class="pulse-indicator"></span>
+              <span><strong>Interactive Sandbox Active:</strong> Click or double-click any heading or card to edit · Press <kbd class="kbd-pill">Ctrl+S</kbd> to save</span>
+            </div>
             
             <div class="sim-site-nav">
               <div class="sim-site-logo">Acme Coffee Roasters</div>
@@ -335,9 +346,49 @@
           </p>
         </div>
 
+        <!-- Interactive Benchmark Race Widget -->
+        <div class="benchmark-card glass-spotlight" id="benchmark-race">
+          <div class="benchmark-top-bar">
+            <div class="benchmark-lead">
+              <span class="benchmark-badge mono-txt">⚡ Live Latency Benchmark</span>
+              <span class="benchmark-heading">Compare time to disk write</span>
+            </div>
+            <button class="glass-btn glass-btn-primary btn-benchmark" id="btn-run-benchmark">
+              <svg class="icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>Run Speed Race</span>
+            </button>
+          </div>
+
+          <div class="benchmark-tracks">
+            <!-- Lane 1: Chat Prompting -->
+            <div class="benchmark-lane" id="lane-chat">
+              <div class="lane-meta">
+                <span class="lane-title">Prompting AI Chat Agent</span>
+                <span class="lane-timer mono-txt" id="timer-chat">0.0s</span>
+              </div>
+              <div class="lane-bar-track">
+                <div class="lane-bar bar-chat" id="bar-chat"></div>
+              </div>
+              <div class="lane-status mono-txt" id="status-chat">Ready to run benchmark</div>
+            </div>
+
+            <!-- Lane 2: live-edit In-Situ -->
+            <div class="benchmark-lane" id="lane-live">
+              <div class="lane-meta">
+                <span class="lane-title font-bold">live-edit (In-Situ &rarr; AST)</span>
+                <span class="lane-timer mono-txt text-pastel-mint" id="timer-live">0.0s</span>
+              </div>
+              <div class="lane-bar-track">
+                <div class="lane-bar bar-live" id="bar-live"></div>
+              </div>
+              <div class="lane-status mono-txt text-pastel-mint" id="status-live">Ready to run benchmark</div>
+            </div>
+          </div>
+        </div>
+
         <div class="problem-contrast-grid">
           <!-- Friction Card: Describe it in chat -->
-          <div class="contrast-card card-friction">
+          <div class="contrast-card card-friction glass-spotlight">
             <div class="contrast-card-header">
               <div class="contrast-badge badge-chat">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -373,7 +424,7 @@
           </div>
 
           <!-- Flow Card: live-edit -->
-          <div class="contrast-card card-flow">
+          <div class="contrast-card card-flow glass-spotlight">
             <div class="contrast-card-header">
               <div class="contrast-badge badge-live">
                 <span class="pulse-indicator-emerald"></span>
@@ -426,7 +477,7 @@
 
         <div class="steps-ladder-grid">
           <!-- Step 1 -->
-          <div class="step-block">
+          <div class="step-block glass-spotlight">
             <div class="step-number-glass">01</div>
             <h3 class="step-title">Install</h3>
             <p class="step-body">
@@ -442,7 +493,7 @@
           </div>
 
           <!-- Step 2 -->
-          <div class="step-block">
+          <div class="step-block glass-spotlight">
             <div class="step-number-glass">02</div>
             <h3 class="step-title">Run</h3>
             <p class="step-body">
@@ -458,7 +509,7 @@
           </div>
 
           <!-- Step 3 -->
-          <div class="step-block">
+          <div class="step-block glass-spotlight">
             <div class="step-number-glass">03</div>
             <h3 class="step-title">Edit and save</h3>
             <p class="step-body">
@@ -753,7 +804,7 @@
           <p class="section-lead">A local proxy, an in-page script, and an agent loop working in deterministic harmony.</p>
         </div>
 
-        <div class="pipeline-canvas-card">
+        <div class="pipeline-canvas-card glass-spotlight">
           <div class="pipeline-flow-diagram">
             
             <!-- Node 1: Browser Editor -->
@@ -767,7 +818,9 @@
             </div>
 
             <div class="pipeline-connector">
-              <span class="connector-line"></span>
+              <span class="connector-line">
+                <span class="data-pulse-dot"></span>
+              </span>
               <span class="connector-label">HTTP /save (POST)</span>
             </div>
 
@@ -784,7 +837,9 @@
             <div class="pipeline-fork">
               <!-- Top Branch: Direct AST Write -->
               <div class="fork-branch branch-top">
-                <div class="branch-line-horiz"></div>
+                <div class="branch-line-horiz">
+                  <span class="data-pulse-dot"></span>
+                </div>
                 <div class="pipeline-node node-result">
                   <div class="node-status text-pastel-mint">&check; Exact text match</div>
                   <div class="node-title">Direct Source Write</div>
@@ -794,7 +849,9 @@
 
               <!-- Bottom Branch: Agent Queue -->
               <div class="fork-branch branch-bottom">
-                <div class="branch-line-horiz"></div>
+                <div class="branch-line-horiz">
+                  <span class="data-pulse-dot"></span>
+                </div>
                 <div class="pipeline-node node-agent">
                   <div class="node-status text-pastel-amber">&Delta; Duplicate / delete / ambiguous</div>
                   <div class="node-title">.live/pending.json &rarr; Antigravity</div>
@@ -960,7 +1017,7 @@
     <!-- SECTION 9: FINAL CALL TO ACTION -->
     <section class="section-cta" id="cta">
       <div class="container">
-        <div class="cta-glass-card">
+        <div class="cta-glass-card glass-spotlight">
           <div class="cta-content">
             <span class="glass-pill cta-badge">Stop describing. Start clicking.</span>
             <h2 class="cta-title">Turn localhost into a visual editor today.</h2>
