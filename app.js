@@ -20,34 +20,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.lenis = lenisInstance;
 
-    function raf(time) {
-      lenisInstance.raf(time);
+    // Synchronize Lenis with GSAP Ticker for jitter-free 60/120Hz frame rates
+    if (typeof gsap !== 'undefined') {
+      gsap.ticker.add((time) => {
+        lenisInstance.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      function raf(time) {
+        lenisInstance.raf(time);
+        requestAnimationFrame(raf);
+      }
       requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
 
     // Sync with GSAP ScrollTrigger if present
     if (typeof ScrollTrigger !== 'undefined') {
       lenisInstance.on('scroll', ScrollTrigger.update);
     }
 
-    // Intercept internal hash links for smooth Lenis gliding
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener('click', function (e) {
-        const hash = this.getAttribute('href');
-        if (!hash || hash === '#') return;
+    // Recalculate layout dimensions on font/image asset load & window resize
+    window.addEventListener('load', () => lenisInstance.resize());
+    window.addEventListener('resize', () => lenisInstance.resize());
+
+    // Intercept internal hash links with dynamic header offset
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest('a[href^="#"]');
+      if (!anchor) return;
+      const hash = anchor.getAttribute('href');
+      if (!hash || hash === '#' || hash.startsWith('#!')) return;
+
+      try {
         const target = document.querySelector(hash);
         if (target) {
           e.preventDefault();
+          const header = document.getElementById('header');
+          const headerHeight = header ? header.offsetHeight : 72;
           lenisInstance.scrollTo(target, {
-            offset: -84, // Header clearance
+            offset: -(headerHeight + 14),
             duration: 1.2,
           });
           if (history.pushState) {
             history.pushState(null, null, hash);
           }
         }
-      });
+      } catch (err) {
+        // Ignore invalid CSS selector
+      }
     });
   }
 
