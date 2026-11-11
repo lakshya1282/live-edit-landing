@@ -1,12 +1,12 @@
 /* ==========================================================================
-   live-edit — Two-Tone Art Book Proofing Deck Edition
-   Palette: Fluorescent Acid Lime on Muted Basalt & Bone Archival Paper
+   live-edit — Editorial Art Book Proofing Deck Edition
+   Palette: Off-White Archival Paper & Warm Basalt with Cardinal Red Secondary Accent
    Layout: Bilateral Split-Screen Desk & Horizontal Catalog Plates
    Typography: Hand-drawn Marker Scribbles + Crisp Editorial Grotesk + Monospace
    ========================================================================== */
 
 :root {
-  /* Two-Tone Surfaces */
+  /* Primary Surfaces: Warm Off-White & Dark Obsidian/Basalt */
   --split-dark: #0e1013;
   --split-dark-surface: #15191f;
   --split-dark-border: rgba(255, 255, 255, 0.12);
@@ -19,16 +19,23 @@
   --split-light-text: #0e1013;
   --split-light-muted: #575e6a;
 
-  /* Fluorescent Accent (Acid Lime) */
-  --accent-lime: #d9ff00;
-  --accent-lime-dim: #b8db00;
-  --accent-lime-ink: #0a0c02;
-  --accent-lime-soft: rgba(217, 255, 0, 0.14);
-  --accent-lime-glow: rgba(217, 255, 0, 0.45);
+  /* Secondary Accent: Cardinal Red / Vermilion */
+  --accent-red: #e11d48;
+  --accent-red-dim: #be123c;
+  --accent-red-ink: #ffffff;
+  --accent-red-soft: rgba(225, 29, 72, 0.12);
+  --accent-red-glow: rgba(225, 29, 72, 0.4);
+
+  /* Legacy alias for component compatibility */
+  --accent-lime: var(--accent-red);
+  --accent-lime-dim: var(--accent-red-dim);
+  --accent-lime-ink: var(--accent-red-ink);
+  --accent-lime-soft: var(--accent-red-soft);
+  --accent-lime-glow: var(--accent-red-glow);
 
   /* Contrast Functional Inks */
-  --ink-red: #f43f5e;
-  --ink-red-soft: rgba(244, 63, 94, 0.12);
+  --ink-red: #e11d48;
+  --ink-red-soft: rgba(225, 29, 72, 0.12);
   --ink-blue: #38bdf8;
   --ink-blue-soft: rgba(56, 189, 248, 0.12);
 
@@ -140,8 +147,12 @@ button {
   color: inherit;
 }
 
+.text-red {
+  color: var(--accent-red);
+}
+
 .text-lime {
-  color: var(--accent-lime);
+  color: var(--accent-red);
 }
 
 .text-muted {
@@ -173,7 +184,7 @@ button {
   background: rgba(14, 16, 19, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 2px solid rgba(217, 255, 0, 0.25);
+  border-bottom: 2px solid rgba(225, 29, 72, 0.25);
   color: var(--split-dark-text);
 }
 
@@ -196,7 +207,7 @@ button {
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  box-shadow: 0 0 12px rgba(217, 255, 0, 0.35);
+  box-shadow: 0 0 12px rgba(225, 29, 72, 0.35);
   transition: transform 0.25s var(--ease-spring);
   flex-shrink: 0;
   display: block;
@@ -275,14 +286,14 @@ button {
   border-radius: var(--radius-sm);
   background: var(--accent-lime);
   color: var(--accent-lime-ink);
-  box-shadow: 0 4px 16px rgba(217, 255, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.3);
   transition: all 0.2s var(--ease-spring);
 }
 
 .header-cta-btn:hover {
   transform: translateY(-2px);
-  background: #e6ff33;
-  box-shadow: 0 8px 24px rgba(217, 255, 0, 0.45);
+  background: #f43f5e;
+  box-shadow: 0 8px 24px rgba(225, 29, 72, 0.45);
 }
 
 /* ==========================================================================
@@ -317,7 +328,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: radial-gradient(rgba(217, 255, 0, 0.04) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(225, 29, 72, 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
   pointer-events: none;
 }
@@ -342,8 +353,8 @@ button {
   font-size: 0.76rem;
   font-weight: 700;
   color: var(--accent-lime);
-  background: rgba(217, 255, 0, 0.1);
-  border: 1px solid rgba(217, 255, 0, 0.25);
+  background: rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(225, 29, 72, 0.25);
   padding: 3px 9px;
   border-radius: 3px;
   letter-spacing: 0.05em;
@@ -403,7 +414,7 @@ button {
 .sim-toggle-btn.active {
   background: var(--accent-lime);
   color: var(--accent-lime-ink);
-  box-shadow: 0 2px 8px rgba(217, 255, 0, 0.35);
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.35);
 }
 
 .pulse-indicator {
@@ -429,7 +440,7 @@ button {
   background: #11141a;
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-md);
-  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(217, 255, 0, 0.1);
+  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(225, 29, 72, 0.1);
   overflow: hidden;
 }
 
@@ -496,7 +507,7 @@ button {
 .url-badge {
   margin-left: auto;
   font-size: 0.64rem;
-  background: rgba(217, 255, 0, 0.15);
+  background: rgba(225, 29, 72, 0.15);
   color: var(--accent-lime);
   padding: 1px 5px;
   border-radius: 2px;
@@ -530,8 +541,8 @@ button {
   display: none;
   align-items: center;
   gap: 8px;
-  background: rgba(217, 255, 0, 0.12);
-  border: 1px solid rgba(217, 255, 0, 0.35);
+  background: rgba(225, 29, 72, 0.12);
+  border: 1px solid rgba(225, 29, 72, 0.35);
   border-radius: 4px;
   padding: 8px 12px;
   margin-bottom: 16px;
@@ -617,7 +628,7 @@ button {
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--accent-lime);
-  background: rgba(217, 255, 0, 0.12);
+  background: rgba(225, 29, 72, 0.12);
   display: inline-block;
   padding: 2px 6px;
   border-radius: 3px;
@@ -678,13 +689,13 @@ button {
 .sim-hovered {
   outline: 2px dashed var(--accent-lime) !important;
   outline-offset: 3px !important;
-  background-color: rgba(217, 255, 0, 0.08) !important;
+  background-color: rgba(225, 29, 72, 0.08) !important;
 }
 
 .sim-selected {
   outline: 2px solid var(--accent-lime) !important;
   outline-offset: 3px !important;
-  background-color: rgba(217, 255, 0, 0.14) !important;
+  background-color: rgba(225, 29, 72, 0.14) !important;
 }
 
 /* Virtual Cursor */
@@ -709,7 +720,7 @@ button {
   font-weight: 800;
   padding: 2px 6px;
   border-radius: 3px;
-  box-shadow: 0 4px 12px rgba(217, 255, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
 }
 
 /* Floating Toolbar */
@@ -720,7 +731,7 @@ button {
   align-items: center;
   gap: 3px;
   background: #171b24;
-  border: 1px solid rgba(217, 255, 0, 0.35);
+  border: 1px solid rgba(225, 29, 72, 0.35);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   border-radius: var(--radius-sm);
   padding: 4px;
@@ -747,7 +758,7 @@ button {
 }
 
 .tool-btn:hover {
-  background: rgba(217, 255, 0, 0.18);
+  background: rgba(225, 29, 72, 0.18);
   color: var(--accent-lime);
 }
 
@@ -766,7 +777,7 @@ button {
   background: #090b0e;
   border: 2px solid var(--accent-lime);
   border-radius: 4px;
-  box-shadow: 0 0 16px rgba(217, 255, 0, 0.4);
+  box-shadow: 0 0 16px rgba(225, 29, 72, 0.4);
   padding: 4px 8px;
 }
 
@@ -807,7 +818,7 @@ button {
   align-items: center;
   gap: 12px;
   background: rgba(22, 27, 36, 0.94);
-  border: 1px solid rgba(217, 255, 0, 0.3);
+  border: 1px solid rgba(225, 29, 72, 0.3);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-pill);
@@ -880,12 +891,12 @@ button {
   font-weight: 800;
   padding: 5px 12px;
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 12px rgba(217, 255, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
   transition: all 0.2s var(--ease-spring);
 }
 
 .hud-save-btn:hover {
-  background: #e6ff33;
+  background: #f43f5e;
   transform: translateY(-1px);
 }
 
@@ -918,7 +929,7 @@ button {
   gap: 8px;
   background: #171c26;
   border: 1px solid var(--accent-lime);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(217, 255, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(225, 29, 72, 0.2);
   padding: 6px 14px;
   border-radius: var(--radius-pill);
   font-size: 0.78rem;
@@ -1092,11 +1103,13 @@ button {
   margin-bottom: 20px;
 }
 
-.lime-ink-mark {
-  background: var(--accent-lime);
-  color: var(--accent-lime-ink);
-  padding: 0 6px;
+.lime-ink-mark,
+.red-ink-mark {
+  background: var(--accent-red);
+  color: #ffffff;
+  padding: 0 8px;
   display: inline-block;
+  border-radius: 3px;
 }
 
 .hero-editorial-lead {
@@ -1170,16 +1183,18 @@ button {
   transition: all 0.2s var(--ease-spring);
 }
 
-.btn-lime-primary {
+.btn-lime-primary,
+.btn-red-primary {
   background: #0e1013;
   color: #ffffff;
   border: 2px solid #0e1013;
-  box-shadow: 3px 3px 0 var(--accent-lime);
+  box-shadow: 3px 3px 0 var(--accent-red);
 }
 
-.btn-lime-primary:hover {
-  background: var(--accent-lime);
-  color: var(--accent-lime-ink);
+.btn-lime-primary:hover,
+.btn-red-primary:hover {
+  background: var(--accent-red);
+  color: #ffffff;
   box-shadow: 4px 4px 0 #0e1013;
   transform: translate(-1px, -1px);
 }
@@ -1843,7 +1858,7 @@ button {
   align-items: center;
   justify-content: space-between;
   font-weight: 700;
-  background: rgba(217, 255, 0, 0.1);
+  background: rgba(225, 29, 72, 0.1);
   color: #ffffff;
 }
 
@@ -1975,7 +1990,7 @@ button {
   width: 36px;
   height: 36px;
   border-radius: 4px;
-  background: rgba(217, 255, 0, 0.12);
+  background: rgba(225, 29, 72, 0.12);
   color: var(--accent-lime);
   display: flex;
   align-items: center;
@@ -2176,7 +2191,7 @@ button {
 }
 
 .glass-copy-action:hover {
-  background: #e6ff33;
+  background: #f43f5e;
 }
 
 .install-options-strip {

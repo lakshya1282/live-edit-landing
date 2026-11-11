@@ -1,31 +1,32 @@
-# Design Tokens: live-edit (Two-Tone Editorial Proofing Edition)
+# Design Tokens: live-edit (Off-White & Red Editorial Edition)
 
-## 1. Palette: Two-Tone Basalt & Bone with Fluorescent Acid Lime
+## 1. Palette: Off-White Archival Paper with Cardinal Red Secondary Accent
 ```css
 :root {
-  /* Two-Tone Surfaces */
-  --split-dark: #0d0f12;
-  --split-dark-surface: #14181d;
+  /* Primary Surfaces: Warm Off-White & Deep Obsidian/Basalt */
+  --split-dark: #0e1013;
+  --split-dark-surface: #15191f;
   --split-dark-border: rgba(255, 255, 255, 0.12);
-  --split-dark-text: #f3f4f6;
-  --split-dark-muted: #9ca3af;
+  --split-dark-text: #f4f5f7;
+  --split-dark-muted: #94a3b8;
 
   --split-light: #f5f2eb;
   --split-light-surface: #ffffff;
   --split-light-border: rgba(0, 0, 0, 0.12);
-  --split-light-text: #111418;
+  --split-light-text: #0e1013;
   --split-light-muted: #575e6a;
 
-  /* Fluorescent Accent (Acid Lime) */
-  --accent-lime: #d9ff00;
-  --accent-lime-dim: #b8d900;
-  --accent-lime-ink: #0a0c02;
-  --accent-lime-soft: rgba(217, 255, 0, 0.16);
+  /* Secondary Accent (Cardinal Red / Vermilion) */
+  --accent-red: #e11d48;
+  --accent-red-dim: #be123c;
+  --accent-red-ink: #ffffff;
+  --accent-red-soft: rgba(225, 29, 72, 0.12);
+  --accent-red-glow: rgba(225, 29, 72, 0.4);
 
   /* Editorial Print Markings */
   --print-stamp-red: #e11d48;
-  --print-stamp-soft: rgba(225, 29, 72, 0.1);
-  --print-crosshair: rgba(0, 0, 0, 0.2);
+  --print-stamp-soft: rgba(225, 29, 72, 0.12);
+  --print-crosshair: rgba(0, 0, 0, 0.15);
 
   /* Typography */
   --font-editorial: 'Sora', sans-serif;
