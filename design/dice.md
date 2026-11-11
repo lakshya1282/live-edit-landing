@@ -1,18 +1,17 @@
 # Taste Engine Dice Roll
 
-SEED SOURCE GALLERY: awwwards.com Sites of the Day archive
-SEED LISTING PAGE: 2
-SEED POSITION ON PAGE: 7
-CHOSEN SEED: Fruitful (awwwards.com/sites/fruitful - June 1, 2024 SOTD Winner)
+SEED SOURCE GALLERY: awwwards.com Honorable Mentions
+SEED LISTING PAGE: 4
+SEED POSITION ON PAGE: 2
+CHOSEN SEED: Counter-Print Books / IDEA Books Art Catalog (awwwards.com Honorable Mention Winner)
 INHERIT ANCHORS:
-  - motion language (fluid micro-springs, responsive magnetic reveals, crisp step-staggers)
-  - interaction mechanics (tactile direct-manipulation, contextual hover pill hints, interactive inspect lens)
-  - color relationships (restrained pastel highlights against a grounded backdrop with deep obsidian text/containers)
-BACKGROUND: mid-tone, neither light nor dark (#1a1f26 deep smoked glass slate with frosted liquid refraction)
-PALETTE LOGIC: pastel pair plus black (Pastel mint #a7f3d0 + pastel ice lavender #e0e7ff + deep obsidian #090d12, zero gradients)
-TYPE PERSONALITY: rounded and friendly with attitude (Sora / Familjen Grotesk + Martian Mono for developer AST telemetry)
-LAYOUT SKELETON: a giant interactive index/list that expands into content
-MOTION SIGNATURE TO ADD ON TOP: color flood transitions between sections
-EXTRA CONSTRAINT: every section uses a different layout logic
-WILDCARD REFERENCE WORLD: art book publisher (clean tectonic grid structure, numbered index folios, editorial precision)
-
+  - motion language (velocity-responsive elastic spring, kinetic track reveals, horizontal momentum glide)
+  - type hierarchy (oversized editorial display paired with ultra-structured catalog text)
+  - spacing rhythm (generous editorial margins, asymmetrical registration, print layout grid)
+BACKGROUND: two-tone split screen (deep gallery basalt #0e1013 on left, warm archival stone paper #f4f1ea on right)
+PALETTE LOGIC: fluorescent accent on muted neutrals (electric acid lime #d9ff00 / #bcf800 on muted basalt stone and warm bone paper, strict no-slop)
+TYPE PERSONALITY: handwritten or marker face for hero annotations (Caveat / Kalam / Caveat Brush), clean tectonic text face for reading (Familjen Grotesk / Sora + Space Mono)
+LAYOUT SKELETON: horizontal scroll gallery deck as the main axis / split-screen exhibition
+MOTION SIGNATURE TO ADD ON TOP: velocity-based skew and stretch tied to scroll speed
+EXTRA CONSTRAINT: rotate at least 3 elements a few degrees on purpose (-2.5deg tilted inspection badge, +3deg skewed file tag, -1.8deg stamp)
+WILDCARD REFERENCE WORLD: art book publisher (folio signatures, registration crosshairs, plate indexes, tactile print marks)
